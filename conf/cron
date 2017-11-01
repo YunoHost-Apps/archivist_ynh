@@ -1,0 +1,1 @@
+__FREQUENCY__ root __FINALPATH__/archivist.sh | tee -a /var/log/__APP__/__APP__.log 2>&1

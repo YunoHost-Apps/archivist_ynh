@@ -1,0 +1,79 @@
+#!/bin/bash
+
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
+app=$YNH_APP_INSTANCE_NAME
+
+final_path=$(ynh_app_setting_get $app final_path)
+frequency=$(ynh_app_setting_get $app frequency)
+
+#=================================================
+# STANDARD UPGRADE STEPS
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
+
+#=================================================
+# SPECIFIC UPGRADE
+#=================================================
+# UPDATE THE CRON FILE
+#=================================================
+
+# Verify the checksum and backup the file if it's different
+ynh_backup_if_checksum_is_different "/etc/cron.d/$app"
+
+cp ../conf/cron /etc/cron.d/$app
+ynh_replace_string "__FINALPATH__" "$final_path" /etc/cron.d/$app
+ynh_replace_string "__APP__" "$app" /etc/cron.d/$app
+if [ "$frequency" = "Daily" ]; then
+	cron_freq="0 0 * * *"
+elif [ "$frequency" = "Each 3 days" ]; then
+	cron_freq="0 0 */3 * *"
+elif [ "$frequency" = "Weekly" ]; then
+	cron_freq="0 0 * * 0"
+elif [ "$frequency" = "Biweekly" ]; then
+	cron_freq="0 0 * * 0/2"
+else	# Monthly
+	cron_freq="0 0 1 * *"
+fi
+ynh_replace_string "__FREQUENCY__" "$cron_freq" /etc/cron.d/$app
+
+# Recalculate and store the config file checksum into the app settings
+ynh_store_file_checksum "/etc/cron.d/$app"
+
+#=================================================
+# SETUP LOGROTATE
+#=================================================
+
+# Use logrotate to manage app-specific logfile(s)
+ynh_use_logrotate
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set right permissions for curl installation
+chown -R root: $final_path

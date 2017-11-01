@@ -1,0 +1,164 @@
+#!/bin/bash
+
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
+encrypt=$YNH_APP_ARG_ENCRYPT
+encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD
+core_backup=$YNH_APP_ARG_CORE_BACKUP
+apps_backup=$YNH_APP_ARG_APPS_BACKUP
+frequency=$YNH_APP_ARG_FREQUENCY
+
+app=$YNH_APP_INSTANCE_NAME
+
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
+#=================================================
+
+final_path=/opt/yunohost/$app
+test ! -e "$final_path" || ynh_die "This path already contains a folder"
+
+if [ $encrypt -eq 1 ]; then
+	test -n "$encryption_pwd" || ynh_die "encryption_pwd can't be empty if you choose to enable encryption."
+fi
+
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
+
+ynh_app_setting_set $app frequency $frequency
+
+#=================================================
+# STANDARD MODIFICATIONS
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+# Valid the fucking debconf message
+# To find this, install the package, install also debconf-utils
+# Then use `debconf-get-selections | grep package`
+echo "encfs encfs/security-information boolean true" | debconf-set-selections
+ynh_install_app_dependencies rsync encfs sshpass
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+ynh_app_setting_set $app final_path $final_path
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
+
+#=================================================
+# SPECIFIC SETUP
+#=================================================
+# CREATE THE BACKUP DIRECTORY
+#=================================================
+
+backup_dir="/home/yunohost.app/${app}_backup"
+enc_backup_dir="/home/yunohost.app/${app}_encrypted_backup"
+mkdir -p "$backup_dir"
+
+#=================================================
+# CONFIGURE ARCHIVIST
+#=================================================
+
+config_file="$final_path/Backup_list.conf"
+cp "$final_path/Backup_list.conf.default" "$config_file"
+
+ynh_replace_string "^backup_dir=.*" "backup_dir=$backup_dir" "$config_file"
+ynh_replace_string "^enc_backup_dir=.*" "enc_backup_dir=$enc_backup_dir" "$config_file"
+
+if [ $encrypt -eq 1 ]
+then
+	encrypt=true
+
+	passkey="$final_path/passkey"
+	echo "$encryption_pwd" > "$passkey"
+	chmod 400 "$passkey"
+else
+	encrypt=false
+	passkey=na
+fi
+ynh_replace_string "^encrypt=.*" "encrypt=$encrypt" "$config_file"
+ynh_replace_string "^cryptpass=.*" "cryptpass=$passkey" "$config_file"
+
+if [ $core_backup -eq 1 ]
+then
+	core_backup=true
+else
+	core_backup=false
+fi
+ynh_replace_string "^ynh_core_backup=.*" "ynh_core_backup=$core_backup" "$config_file"
+
+if [ $apps_backup -eq 1 ]
+then
+	# Add all current applications to the backup
+	while read backup_app
+	do
+		ynh_replace_string "^ynh_app_backup=$" "ynh_app_backup=$backup_app\n&" "$config_file"
+	done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
+fi
+
+#=================================================
+# SET THE CRON FILE
+#=================================================
+
+cp ../conf/cron /etc/cron.d/$app
+ynh_replace_string "__FINALPATH__" "$final_path" /etc/cron.d/$app
+ynh_replace_string "__APP__" "$app" /etc/cron.d/$app
+if [ "$frequency" = "Daily" ]; then
+	cron_freq="0 0 * * *"
+elif [ "$frequency" = "Each 3 days" ]; then
+	cron_freq="0 0 */3 * *"
+elif [ "$frequency" = "Weekly" ]; then
+	cron_freq="0 0 * * 0"
+elif [ "$frequency" = "Biweekly" ]; then
+	cron_freq="0 0 * * 0/2"
+else	# Monthly
+	cron_freq="0 0 1 * *"
+fi
+ynh_replace_string "__FREQUENCY__" "$cron_freq" /etc/cron.d/$app
+
+# Calculate and store the config file checksum into the app settings
+ynh_store_file_checksum "/etc/cron.d/$app"
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set permissions to app files
+chown -R root: $final_path
+
+#=================================================
+# SETUP LOGROTATE
+#=================================================
+
+mkdir -p /var/log/$app
+# Use logrotate to manage application logfile(s)
+ynh_use_logrotate
+
+#=================================================
+# PRINT INFORMATIONS
+#=================================================
+
+WARNING echo -e "\nTo add recipients or to modify the files or apps to backup,
+please have a look to the config file $config_file."
