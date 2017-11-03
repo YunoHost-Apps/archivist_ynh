@@ -13,7 +13,7 @@ It can also makes backups of specified directories.
 Your backups can be send to many other places, local or distant.  
 Archivist is automatically launched periodicaly to update your backups and send the modifications to the other places.
 
-**Shipped version:** 0.2
+**Shipped version:** 0.3
 
 ## Screenshots
 

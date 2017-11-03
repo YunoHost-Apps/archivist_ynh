@@ -47,15 +47,15 @@ cp ../conf/cron /etc/cron.d/$app
 ynh_replace_string "__FINALPATH__" "$final_path" /etc/cron.d/$app
 ynh_replace_string "__APP__" "$app" /etc/cron.d/$app
 if [ "$frequency" = "Daily" ]; then
-	cron_freq="0 0 * * *"
+	cron_freq="0 2 * * *"
 elif [ "$frequency" = "Each 3 days" ]; then
-	cron_freq="0 0 */3 * *"
+	cron_freq="0 2 */3 * *"
 elif [ "$frequency" = "Weekly" ]; then
-	cron_freq="0 0 * * 0"
+	cron_freq="0 2 * * 0"
 elif [ "$frequency" = "Biweekly" ]; then
-	cron_freq="0 0 * * 0/2"
+	cron_freq="0 2 * * 0/2"
 else	# Monthly
-	cron_freq="0 0 1 * *"
+	cron_freq="0 2 1 * *"
 fi
 ynh_replace_string "__FREQUENCY__" "$cron_freq" /etc/cron.d/$app
 
