@@ -73,4 +73,4 @@ ynh_restore_file "/etc/cron.d/$app"
 # RECREATE DIRECTORIES
 #=================================================
 
-mkdir -p "/home/yunohost.app/${app}_backup"
+mkdir -p "/home/yunohost.app/${app}/backup"

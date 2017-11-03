@@ -50,4 +50,4 @@ ynh_remove_logrotate
 ynh_secure_remove "/etc/cron.d/$app"
 
 # Remove the backup directory
-ynh_secure_remove "/home/yunohost.app/${app}_backup"
+ynh_secure_remove "/home/yunohost.app/${app}/backup"

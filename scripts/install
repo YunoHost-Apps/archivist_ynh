@@ -71,8 +71,8 @@ ynh_setup_source "$final_path"
 # CREATE THE BACKUP DIRECTORY
 #=================================================
 
-backup_dir="/home/yunohost.app/${app}_backup"
-enc_backup_dir="/home/yunohost.app/${app}_encrypted_backup"
+backup_dir="/home/yunohost.app/${app}/backup"
+enc_backup_dir="/home/yunohost.app/${app}/encrypted_backup"
 mkdir -p "$backup_dir"
 
 #=================================================
@@ -161,4 +161,4 @@ ynh_use_logrotate
 #=================================================
 
 WARNING echo -e "\nTo add recipients or to modify the files or apps to backup,
-please have a look to the config file $config_file."
+please have a look to the config file $config_file"
