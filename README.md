@@ -1,7 +1,9 @@
 # Archivist for YunoHost
 
 [![Integration level](https://dash.yunohost.org/integration/archivist.svg)](https://ci-apps.yunohost.org/jenkins/job/archivist%20%28Community%29/lastBuild/consoleFull)  
-[![Install ssh chroot directory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=archivist)  
+[![Install archivist with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=archivist)
+
+*[Lire ce readme en français.](./README_fr.md)*
 
 > *This package allow you to install archivist quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
@@ -38,7 +40,7 @@ Not relevant.
 
 ## Limitations
 
-Encfs, which be used to encrypt the data, is not fully secured.  
+* Encfs, which be used to encrypt the data, is not fully secured.  
 Have a look to the [security audit](https://defuse.ca/audits/encfs.htm) to have more informations.
 
 ## Links
