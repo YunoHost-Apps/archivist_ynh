@@ -234,6 +234,49 @@ EOF
 	chmod +x "/etc/cron.daily/node_update"
 }
 
+#=================================================
+# EXPERIMENTAL HELPERS
+#=================================================
+
+ynh_check_starting () {
+	local line_to_match="$1"
+	local app_log="${2:-/var/log/$app/$app.log}"
+	local timeout=${3:-300}
+
+	ynh_clean_check_starting () {
+		# Stop the execution of tail.
+		kill -s 15 $pid_tail 2>&1
+		ynh_secure_remove "$templog" 2>&1
+	}
+
+	echo "Starting of $app" >&2
+	systemctl restart $app
+	local templog="$(mktemp)"
+	# Following the starting of the app in its log
+	tail -f -n1 "$app_log" > "$templog" &
+	# Get the PID of the tail command
+	local pid_tail=$!
+
+	local i=0
+	for i in `seq 1 $timeout`
+	do
+		# Read the log until the sentence is found, that means the app finished to start. Or run until the timeout
+		if grep --quiet "$line_to_match" "$templog"
+		then
+			echo "The service $app has correctly started." >&2
+			break
+		fi
+		echo -n "." >&2
+		sleep 1
+	done
+	if [ $i -eq $timeout ]
+	then
+		echo "The service $app didn't fully started before the timeout." >&2
+	fi
+
+	echo ""
+	ynh_clean_check_starting
+}
 
 #=================================================
 #============= FUTURE YUNOHOST HELPER ============
