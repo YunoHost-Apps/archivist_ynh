@@ -125,14 +125,19 @@ ynh_replace_string "__FINALPATH__" "$final_path" /etc/cron.d/$app
 ynh_replace_string "__APP__" "$app" /etc/cron.d/$app
 if [ "$frequency" = "Daily" ]; then
 	cron_freq="0 2 * * *"
+	run_freq="every day"
 elif [ "$frequency" = "Each 3 days" ]; then
 	cron_freq="0 2 */3 * *"
+	run_freq="each 3 days"
 elif [ "$frequency" = "Weekly" ]; then
 	cron_freq="0 2 * * 0"
+	run_freq="once a week on sunday"
 elif [ "$frequency" = "Biweekly" ]; then
 	cron_freq="0 2 * * 0/2"
+	run_freq="one sunday out of two"
 else	# Monthly
 	cron_freq="0 2 1 * *"
+	run_freq="once a month on the first sunday"
 fi
 ynh_replace_string "__FREQUENCY__" "$cron_freq" /etc/cron.d/$app
 
@@ -160,5 +165,30 @@ ynh_use_logrotate
 # PRINT INFORMATIONS
 #=================================================
 
-WARNING echo -e "\nTo add recipients or to modify the files or apps to backup,
+Informations="To add recipients or to modify the files or apps to backup,
 please have a look to the config file $config_file"
+ynh_print_info "
+$Informations" >&2
+
+#=================================================
+# SEND A README FOR THE ADMIN
+#=================================================
+
+if [ "$encrypt" = "true" ]
+then
+	encrypt_message="Your password for encryption is '$encryption_pwd'
+
+"
+else
+	encrypt_message=""
+fi
+
+message="${encrypt_message}Archivist is going to run $run_freq.
+If you want to change the frequency, have a look to the file /etc/cron.d/$app.
+
+$Informations
+Please read the documentation (https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md) about the configuration of archivist for more informations.
+
+If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
+
+ynh_send_readme_to_admin "$message" "root"
