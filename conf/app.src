@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/maniackcrudelis/archivist/archive/v0.4.tar.gz
-SOURCE_SUM=1c6e3a62973f22662b95eb0bf4985daf
+SOURCE_URL=https://github.com/maniackcrudelis/archivist/archive/v0.5.tar.gz
+SOURCE_SUM=509f626df66f02863c4323b0af1f11ff
 SOURCE_SUM_PRG=md5sum
 SOURCE_FORMAT=tar.gz
 SOURCE_IN_SUBDIR=true
