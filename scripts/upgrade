@@ -26,6 +26,12 @@ final_path=$(ynh_app_setting_get $app final_path)
 frequency=$(ynh_app_setting_get $app frequency)
 
 #=================================================
+# CHECK VERSION
+#=================================================
+
+ynh_abort_if_up_to_date
+
+#=================================================
 # STANDARD UPGRADE STEPS
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -67,7 +73,7 @@ ynh_store_file_checksum "/etc/cron.d/$app"
 #=================================================
 
 # Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate
+ynh_use_logrotate --non-append
 
 #=================================================
 # GENERIC FINALIZATION
