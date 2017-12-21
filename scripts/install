@@ -21,7 +21,7 @@ ynh_abort_if_errors
 #=================================================
 
 encrypt=$YNH_APP_ARG_ENCRYPT
-encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD
+ynh_print_OFF; encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD; ynh_print_ON
 core_backup=$YNH_APP_ARG_CORE_BACKUP
 apps_backup=$YNH_APP_ARG_APPS_BACKUP
 frequency=$YNH_APP_ARG_FREQUENCY
@@ -36,7 +36,9 @@ final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
 if [ $encrypt -eq 1 ]; then
+	ynh_print_OFF
 	test -n "$encryption_pwd" || ynh_die "encryption_pwd can't be empty if you choose to enable encryption."
+	ynh_print_ON
 fi
 
 #=================================================
@@ -90,7 +92,7 @@ then
 	encrypt=true
 
 	passkey="$final_path/passkey"
-	echo "$encryption_pwd" > "$passkey"
+	ynh_print_OFF; echo "$encryption_pwd" > "$passkey"; ynh_print_ON
 	chmod 400 "$passkey"
 else
 	encrypt=false
@@ -174,6 +176,7 @@ $Informations" >&2
 # SEND A README FOR THE ADMIN
 #=================================================
 
+ynh_print_OFF
 if [ "$encrypt" = "true" ]
 then
 	encrypt_message="Your password for encryption is '$encryption_pwd'
@@ -192,3 +195,4 @@ Please read the documentation (https://github.com/maniackcrudelis/archivist/blob
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
 
 ynh_send_readme_to_admin "$message" "root"
+ynh_print_ON
