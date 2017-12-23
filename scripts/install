@@ -24,7 +24,7 @@ encrypt=$YNH_APP_ARG_ENCRYPT
 ynh_print_OFF; encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD; ynh_print_ON
 core_backup=$YNH_APP_ARG_CORE_BACKUP
 apps_backup=$YNH_APP_ARG_APPS_BACKUP
-frequency=$YNH_APP_ARG_FREQUENCY
+frequency="$YNH_APP_ARG_FREQUENCY"
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -45,7 +45,7 @@ fi
 # STORE SETTINGS FROM MANIFEST
 #=================================================
 
-ynh_app_setting_set $app frequency $frequency
+ynh_app_setting_set $app frequency "$frequency"
 
 #=================================================
 # STANDARD MODIFICATIONS
