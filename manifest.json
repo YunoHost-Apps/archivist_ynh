@@ -6,7 +6,7 @@
 		"en": "Automatic backups.",
 		"fr": "Sauvegardes automatiques."
 	},
-	"version": "0.5~ynh1",
+	"version": "0.6~ynh1",
 	"url": "https://github.com/maniackcrudelis/archivist",
 	"license": "GPL-3.0",
 	"maintainer": {
@@ -37,8 +37,8 @@
 					"fr": "Définissez le mot de passe de chiffrement."
 				},
 				"help": {
-					"en": "It's needed if you not turn off the encryption.",
-					"fr": "C'est nécessaire si vous n'avez pas désactivé le chiffrement."
+					"en": "It's needed if you use backup encryption.",
+					"fr": "C'est nécessaire si vous utilisez le chiffrement."
 				},
 				"optional": true
 			},
