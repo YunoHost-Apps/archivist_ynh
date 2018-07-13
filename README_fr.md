@@ -1,6 +1,6 @@
 # Archivist pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/archivist.svg)](https://ci-apps.yunohost.org/jenkins/job/archivist%20%28Community%29/lastBuild/consoleFull)  
+[![Niveau d'intégration](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist)  
 [![Installer archivist avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=archivist)
 
 *[Read this readme in english.](./README.md)*
@@ -18,6 +18,10 @@ Archivist est automatiquement lancé périodiquement pour mettre à jour vos sau
 **Version embarquée:** 0.6
 
 ## Captures d'écran
+
+## Démo
+
+Aucune démo pour cette application.
 
 ## Configuration
 
@@ -37,7 +41,8 @@ Non applicable
 #### Architectures supportées.
 
 * x86-64b - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/archivist%20(Community)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/archivist%20(Community)/)
-* ARMv8-A - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/archivist%20(Community)%20(%7EARM%7E)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/archivist%20(Community)%20(%7EARM%7E)/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/jenkins/job/archivist%20(Community)%20(%7EARM%7E)/badge/icon)](https://ci-apps-arm.yunohost.org/jenkins/job/archivist%20(Community)%20(%7EARM%7E)/)
+* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/jenkins/job/archivist%20(Community)/badge/icon)](https://ci-stretch.nohost.me/jenkins/job/archivist%20(Community)/)
 
 ## Limitations
 

@@ -6,12 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-if [ ! -e _common.sh ]; then
-	# Get the _common.sh file if it's not in the current directory
-	cp ../settings/scripts/_common.sh ./_common.sh
-	chmod a+rx _common.sh
-fi
-source _common.sh
+source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -86,4 +81,4 @@ Please read the documentation (https://github.com/maniackcrudelis/archivist/blob
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
 
-ynh_send_readme_to_admin "$message" "root"
+ynh_send_readme_to_admin --app_message="$message" --recipients="root"

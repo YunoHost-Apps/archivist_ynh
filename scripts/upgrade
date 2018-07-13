@@ -29,7 +29,20 @@ frequency="$(ynh_app_setting_get $app frequency)"
 # CHECK VERSION
 #=================================================
 
-ynh_abort_if_up_to_date
+upgrade_type=$(ynh_check_app_version_changed)
+
+#=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+
+# Backup the current version of the app
+ynh_backup_before_upgrade
+ynh_clean_setup () {
+	# restore it if the upgrade fails
+	ynh_restore_upgradebackup
+}
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -37,8 +50,11 @@ ynh_abort_if_up_to_date
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-# Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source "$final_path"
+if [ "$upgrade_type" == "UPGRADE_APP" ]
+then
+	# Download, check integrity, uncompress and patch the source from app.src
+	ynh_setup_source "$final_path"
+fi
 
 #=================================================
 # SPECIFIC UPGRADE
