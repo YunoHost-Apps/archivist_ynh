@@ -194,5 +194,5 @@ Please read the documentation (https://github.com/maniackcrudelis/archivist/blob
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
 
-ynh_send_readme_to_admin "$message" "root"
+ynh_send_readme_to_admin --app_message="$message" --recipients="root"
 ynh_print_ON
