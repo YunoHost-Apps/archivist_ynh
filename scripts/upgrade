@@ -59,6 +59,16 @@ fi
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
+# STRETCH COMPATIBILITY
+#=================================================
+
+if is_stretch
+then
+	ynh_replace_string "yunohost backup create --ignore-apps" "yunohost backup create" "$final_path/archivist.sh"
+	ynh_replace_string "yunohost backup create --ignore-system" "yunohost backup create" "$final_path/archivist.sh"
+fi
+
+#=================================================
 # UPDATE THE CRON FILE
 #=================================================
 
