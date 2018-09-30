@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#=================================================
+# GENERIC STARTING
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source scripts/_common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# RETRIEVE ARGUMENTS
+#=================================================
+
+app=${YNH_APP_INSTANCE_NAME:-$YNH_APP_ID}
+
+final_path=$(ynh_app_setting_get $app final_path)
+
+#=================================================
+# CHECK IF ARGUMENTS ARE CORRECT
+#=================================================
+
+#=================================================
+# CHECK IF AN ACTION HAS TO BE DONE
+#=================================================
+
+#=================================================
+# SPECIFIC ACTION
+#=================================================
+# CLEAN ALL BACKUP FILES
+#=================================================
+
+# Get the backup directory from the config file
+backup_dir="$(grep "^backup_dir=" "$final_path/Backup_list.conf" | cut -d= -f2)"
+
+while read directory <&3
+do
+	if [ -n "$directory" ]
+	then
+		ynh_print_info "Clean backup directory $directory" >&2
+		ynh_secure_remove "$directory"
+	fi
+done 3<<< $(find "$backup_dir" -maxdepth 1 -mindepth 1 -type d)
