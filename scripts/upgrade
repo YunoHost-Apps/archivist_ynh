@@ -24,12 +24,49 @@ app=$YNH_APP_INSTANCE_NAME
 
 final_path=$(ynh_app_setting_get $app final_path)
 frequency="$(ynh_app_setting_get $app frequency)"
+encrypt=$(ynh_app_setting_get $app encrypt)
+core_backup=$(ynh_app_setting_get $app core_backup)
+apps_backup=$(ynh_app_setting_get $app apps_backup)
+overwrite_cron=$(ynh_app_setting_get $app overwrite_cron)
 
 #=================================================
 # CHECK VERSION
 #=================================================
 
 upgrade_type=$(ynh_check_app_version_changed)
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+
+# If encrypt doesn't exist, create it
+if [ -z "$encrypt" ]; then
+	encrypt="$(grep "^encrypt=" "$final_path/Backup_list.conf" | cut -d= -f2)"
+	if [ "$encrypt" = true ]; then
+		encrypt=1
+	else
+		encrypt=0
+	fi
+	ynh_app_setting_set $app encrypt $encrypt
+fi
+
+# If core_backup doesn't exist, create it
+if [ -z "$core_backup" ]; then
+	core_backup="$(grep "^ynh_core_backup=" "$final_path/Backup_list.conf" | cut -d= -f2)"
+	ynh_app_setting_set $app core_backup $core_backup
+fi
+
+# If apps_backup doesn't exist, create it
+if [ -z "$apps_backup" ]; then
+	apps_backup="$(grep --count --max-count=1 "^ynh_app_backup=" "$final_path/Backup_list.conf")"
+	ynh_app_setting_set $app apps_backup $apps_backup
+fi
+
+# If overwrite_cron doesn't exist, create it
+if [ -z "$overwrite_cron" ]; then
+	overwrite_cron=1
+	ynh_app_setting_set $app overwrite_cron $overwrite_cron
+fi
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -72,27 +109,31 @@ fi
 # UPDATE THE CRON FILE
 #=================================================
 
-# Verify the checksum and backup the file if it's different
-ynh_backup_if_checksum_is_different "/etc/cron.d/$app"
+# Overwrite the cron file only if it's allowed
+if [ $overwrite_cron -eq 1 ]
+then
+	# Verify the checksum and backup the file if it's different
+	ynh_backup_if_checksum_is_different "/etc/cron.d/$app"
 
-cp ../conf/cron /etc/cron.d/$app
-ynh_replace_string "__FINALPATH__" "$final_path" /etc/cron.d/$app
-ynh_replace_string "__APP__" "$app" /etc/cron.d/$app
-if [ "$frequency" = "Daily" ]; then
-	cron_freq="0 2 * * *"
-elif [ "$frequency" = "Each 3 days" ]; then
-	cron_freq="0 2 */3 * *"
-elif [ "$frequency" = "Weekly" ]; then
-	cron_freq="0 2 * * 0"
-elif [ "$frequency" = "Biweekly" ]; then
-	cron_freq="0 2 * * 0/2"
-else	# Monthly
-	cron_freq="0 2 1 * *"
+	cp ../conf/cron /etc/cron.d/$app
+	ynh_replace_string "__FINALPATH__" "$final_path" /etc/cron.d/$app
+	ynh_replace_string "__APP__" "$app" /etc/cron.d/$app
+	if [ "$frequency" = "Daily" ]; then
+		cron_freq="0 2 * * *"
+	elif [ "$frequency" = "Each 3 days" ]; then
+		cron_freq="0 2 */3 * *"
+	elif [ "$frequency" = "Weekly" ]; then
+		cron_freq="0 2 * * 0"
+	elif [ "$frequency" = "Biweekly" ]; then
+		cron_freq="0 2 * * 0/2"
+	else	# Monthly
+		cron_freq="0 2 1 * *"
+	fi
+	ynh_replace_string "__FREQUENCY__" "$cron_freq" /etc/cron.d/$app
+
+	# Recalculate and store the config file checksum into the app settings
+	ynh_store_file_checksum "/etc/cron.d/$app"
 fi
-ynh_replace_string "__FREQUENCY__" "$cron_freq" /etc/cron.d/$app
-
-# Recalculate and store the config file checksum into the app settings
-ynh_store_file_checksum "/etc/cron.d/$app"
 
 #=================================================
 # SETUP LOGROTATE

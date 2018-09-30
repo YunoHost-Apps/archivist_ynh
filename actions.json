@@ -19,4 +19,15 @@
 			"en": "Remove all previous backup files made by Archivist.",
 			"fr": "Supprime tout les précédents backups créés par Archivist."
 		}
+},
+{
+		"id": "reset_default_config",
+		"name": "Reset the config file and restore a default one.",
+		"command": "/bin/bash scripts/actions/reset_default_config \"Backup_list.conf\"",
+		"user": "root",
+		"accepted_return_codes": [0],
+		"description": {
+			"en": "Reset the config file Backup_list.conf.",
+			"fr": "Réinitialise le fichier de configuration Backup_list.conf."
+		}
 }]

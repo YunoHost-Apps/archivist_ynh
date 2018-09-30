@@ -31,6 +31,24 @@ IS_PACKAGE_CHECK () {
 }
 
 #=================================================
+# BOOLEAN CONVERTER
+#=================================================
+
+bool_to_01 () {
+	local var="$1"
+	[ "$var" = "true" ] && var=1
+	[ "$var" = "false" ] && var=0
+	echo "$var"
+}
+
+bool_to_true_false () {
+	local var="$1"
+	[ "$var" = "1" ] && var=true
+	[ "$var" = "0" ] && var=false
+	echo "$var"
+}
+
+#=================================================
 # EXPERIMENTAL HELPERS
 #=================================================
 
@@ -517,7 +535,7 @@ EOF
   ynh_store_file_checksum "$finalfail2banjailconf"
   ynh_store_file_checksum "$finalfail2banfilterconf"
 
-  systemctl reload fail2ban
+  systemctl restart fail2ban
   local fail2ban_error="$(journalctl -u fail2ban | tail -n50 | grep "WARNING.*$app.*")"
   if [ -n "$fail2ban_error" ]
   then
@@ -532,7 +550,7 @@ EOF
 ynh_remove_fail2ban_config () {
   ynh_secure_remove "/etc/fail2ban/jail.d/$app.conf"
   ynh_secure_remove "/etc/fail2ban/filter.d/$app.conf"
-  systemctl reload fail2ban
+  systemctl restart fail2ban
 }
 
 #=================================================

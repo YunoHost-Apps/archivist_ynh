@@ -13,7 +13,7 @@ source /usr/share/yunohost/helpers
 # RETRIEVE ARGUMENTS
 #=================================================
 
-app=$YNH_APP_ID
+app=${YNH_APP_INSTANCE_NAME:-$YNH_APP_ID}
 
 final_path=$(ynh_app_setting_get $app final_path)
 
@@ -36,36 +36,41 @@ get_config_value() {
 # LOAD VALUES
 #=================================================
 
-	# Load the real value from the app config or elsewhere.
-	# Then get the value from the form.
-	# If the form has a value for a variable, take the value from the form,
-	# Otherwise, keep the value from the app config.
+# Load the real value from the app config or elsewhere.
+# Then get the value from the form.
+# If the form has a value for a variable, take the value from the form,
+# Otherwise, keep the value from the app config.
 
-	# Encryption
-	old_encrypt="$(get_config_value encrypt)"
-	encrypt="${YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPT:-$old_encrypt}"
-	# Encryption password
-	ynh_print_OFF
-	old_encrypt_password="$(cat $passkey)"
-	encrypt_password="${YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD:-$old_encrypt_password}"
-	ynh_print_ON
-	# ynh_core_backup
-	old_ynh_core_backup="$(get_config_value ynh_core_backup)"
-	ynh_core_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP:-$old_ynh_core_backup}"
-	# ynh_app_backup
-	if [ -n "$(get_config_value ynh_app_backup)" ]
-	then
-		old_ynh_app_backup="true"
-	else
-		old_ynh_app_backup="false"
-	fi
-	ynh_app_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP:-$old_ynh_app_backup}"
-	# Frequency
-	old_frequency="$(grep "^frequency: " "/etc/yunohost/apps/$app/settings.yml" | cut -d' ' -f2)"
-	frequency="${YNH_CONFIG_MAIN_BACKUP_OPTIONS_FREQUENCY:-$old_frequency}"
-	# Max size
-	old_max_size="$(get_config_value max_size)"
-	max_size="${YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE:-$old_max_size}"
+# Encryption
+old_encrypt="$(get_config_value encrypt)"
+encrypt="${YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPT:-$old_encrypt}"
+# Encryption password
+ynh_print_OFF
+old_encrypt_password="$(cat $passkey)"
+encrypt_password="${YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD:-$old_encrypt_password}"
+ynh_print_ON
+# ynh_core_backup
+old_ynh_core_backup="$(get_config_value ynh_core_backup)"
+ynh_core_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP:-$old_ynh_core_backup}"
+# ynh_app_backup
+if [ -n "$(get_config_value ynh_app_backup)" ]
+then
+	old_ynh_app_backup="true"
+else
+	old_ynh_app_backup="false"
+fi
+ynh_app_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP:-$old_ynh_app_backup}"
+# Frequency
+old_frequency="$(grep "^frequency: " "/etc/yunohost/apps/$app/settings.yml" | cut -d' ' -f2)"
+frequency="${YNH_CONFIG_MAIN_BACKUP_OPTIONS_FREQUENCY:-$old_frequency}"
+# Max size
+old_max_size="$(get_config_value max_size)"
+max_size="${YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE:-$old_max_size}"
+
+# Overwrite cron file
+old_overwrite_cron="$(ynh_app_setting_get $app overwrite_cron)"
+old_overwrite_cron=$(bool_to_true_false $old_overwrite_cron)
+overwrite_cron="${YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON:-$old_overwrite_cron}"
 
 #=================================================
 # SHOW_CONFIG FUNCTION FOR 'SHOW' COMMAND
@@ -82,6 +87,8 @@ show_config() {
 
 	echo "YNH_CONFIG_MAIN_BACKUP_OPTIONS_FREQUENCY=$frequency"
 	echo "YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE=$max_size"
+
+	echo "YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON=$overwrite_cron"
 }
 
 #=================================================
@@ -117,7 +124,8 @@ apply_config() {
 			ynh_print_info "Add a backup for the app $backup_app." >&2
 			ynh_replace_string "^ynh_app_backup=$" "ynh_app_backup=$backup_app\n&" "$config_file"
 		done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
-	else
+	elif [ "$ynh_app_backup" = "false" ] && [ "$old_ynh_app_backup" = "true" ]
+	then
 		# Remove all app currently backup
 		# By deleting all line starting by 'ynh_app_backup=' and having something after '='
 		sed -i "/^ynh_app_backup=.\+$/d" "$config_file"
@@ -145,6 +153,10 @@ apply_config() {
 
 	# Change max_size in the config file
 	ynh_replace_string "^max_size=.*" "max_size=$max_size" "$config_file"
+
+	# Set overwrite_cron
+	overwrite_cron=$(bool_to_01 $overwrite_cron)
+	ynh_app_setting_set $app overwrite_cron "$overwrite_cron"
 }
 
 #=================================================

@@ -53,6 +53,17 @@
 				"type": "number",
 				"default": 500
 			}]
+		},
+		{
+			"name": "Overwriting config files",
+			"id": "overwrite_files",
+			"options": [{
+				"name": "Overwrite the cron file during the upgrade ?",
+				"help": "If the file is overwritten, a backup will be created.",
+				"id": "overwrite_cron",
+				"type": "bool",
+				"default": true
+			}]
 		}]
 	}
 ]
