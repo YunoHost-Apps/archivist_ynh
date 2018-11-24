@@ -6,7 +6,7 @@
 		"en": "Automatic backups.",
 		"fr": "Sauvegardes automatiques."
 	},
-	"version": "0.6~ynh3",
+	"version": "0.7~ynh1",
 	"url": "https://github.com/maniackcrudelis/archivist",
 	"license": "GPL-3.0",
 	"maintainer": {
