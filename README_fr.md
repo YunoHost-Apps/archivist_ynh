@@ -15,7 +15,7 @@ Il peut également faire des sauvegardes de répertoires spécifiques.
 Vos sauvegardes peuvent être envoyées à de nombreux autres endroits, locaux ou distants.  
 Archivist est automatiquement lancé périodiquement pour mettre à jour vos sauvegardes et envoyer les modifications aux autres emplacements.
 
-**Version embarquée:** 0.6
+**Version embarquée:** 0.7
 
 ## Captures d'écran
 
@@ -40,9 +40,9 @@ Non applicable
 
 #### Architectures supportées.
 
-* x86-64b - [![Build Status](https://ci-apps.yunohost.org/jenkins/job/archivist%20(Community)/badge/icon)](https://ci-apps.yunohost.org/jenkins/job/archivist%20(Community)/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/jenkins/job/archivist%20(Community)%20(%7EARM%7E)/badge/icon)](https://ci-apps-arm.yunohost.org/jenkins/job/archivist%20(Community)%20(%7EARM%7E)/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/jenkins/job/archivist%20(Community)/badge/icon)](https://ci-stretch.nohost.me/jenkins/job/archivist%20(Community)/)
+* x86-64b - ![](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Community%29.svg)
+* ARMv8-A - ![](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Community%29.svg)
+* Jessie x86-64b - ![](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Community%29.svg)
 
 ## Limitations
 
