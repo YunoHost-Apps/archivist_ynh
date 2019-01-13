@@ -8,6 +8,8 @@
 
 source _common.sh
 source /usr/share/yunohost/helpers
+# Load common variables for all scripts.
+source _variables
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -92,6 +94,12 @@ then
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source "$final_path"
 fi
+
+#=================================================
+# UPGRADE DEPENDENCIES
+#=================================================
+
+ynh_install_app_dependencies $app_depencencies
 
 #=================================================
 # SPECIFIC UPGRADE

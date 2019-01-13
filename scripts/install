@@ -8,6 +8,8 @@
 
 source _common.sh
 source /usr/share/yunohost/helpers
+# Load common variables for all scripts.
+source _variables
 
 #=================================================
 # MANAGE SCRIPT FAILURE
@@ -61,7 +63,7 @@ ynh_app_setting_set $app overwrite_cron "1"
 # To find this, install the package, install also debconf-utils
 # Then use `debconf-get-selections | grep package`
 echo "encfs encfs/security-information boolean true" | debconf-set-selections
-ynh_install_app_dependencies rsync encfs sshpass
+ynh_install_app_dependencies $app_depencencies
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
