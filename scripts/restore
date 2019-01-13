@@ -64,7 +64,7 @@ echo "encfs encfs/security-information boolean true" | debconf-set-selections
 ynh_install_app_dependencies $app_depencencies
 
 #=================================================
-# RESTORE LOGROTATE
+# RESTORE THE LOGROTATE CONFIGURATION
 #=================================================
 
 mkdir -p /var/log/$app
@@ -89,8 +89,8 @@ mkdir -p "/home/yunohost.app/${app}/backup"
 message="If you want to change the frequency of Archivist, have a look to the file /etc/cron.d/$app.
 
 The configuration file of Archivist has been restored at $final_path/Backup_list.conf
-Please read the documentation (https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md) about the configuration of archivist for more informations.
+Please read the documentation (https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md) about the configuration of archivist for more information.
 
-If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
+If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
 
 ynh_send_readme_to_admin --app_message="$message" --recipients="root"
