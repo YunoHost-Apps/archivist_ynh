@@ -205,13 +205,19 @@ else
 	encrypt_message=""
 fi
 
+# Get main domain and buid the url of the admin panel of the app.
+admin_panel="https://$(grep portal_domain /etc/ssowat/conf.json | cut -d'"' -f4)/yunohost/admin/#/apps/$app"
+
 message="${encrypt_message}Archivist is going to run $run_freq.
 If you want to change the frequency, have a look to the file /etc/cron.d/$app.
 
 $Informations
 Please read the documentation (https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md) about the configuration of archivist for more information.
 
+You can configure this app easily by using the experimental [config-panel feature]($admin_panel/config-panel).
+You can also find some specific actions for this app by using the experimental [action feature]($admin_panel/actions).
+
 If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
 
-ynh_send_readme_to_admin --app_message="$message" --recipients="root"
+ynh_send_readme_to_admin --app_message="$message" --recipients="root" --type="install"
 ynh_print_ON

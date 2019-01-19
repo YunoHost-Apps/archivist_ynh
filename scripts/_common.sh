@@ -630,21 +630,24 @@ ynh_clean_check_starting () {
 
 # Send an email to inform the administrator
 #
-# usage: ynh_send_readme_to_admin app_message [recipients]
+# usage: ynh_send_readme_to_admin --app_message=app_message [--recipients=recipients] [--type=type]
 # | arg: -m --app_message= - The message to send to the administrator.
 # | arg: -r, --recipients= - The recipients of this email. Use spaces to separate multiples recipients. - default: root
 #	example: "root admin@domain"
 #	If you give the name of a YunoHost user, ynh_send_readme_to_admin will find its email adress for you
 #	example: "root admin@domain user1 user2"
+# | arg: -t, --type= - Type of mail, could be 'backup', 'change_url', 'install', 'remove', 'restore', 'upgrade'
 ynh_send_readme_to_admin() {
 	# Declare an array to define the options of this helper.
-	declare -Ar args_array=( [m]=app_message= [r]=recipients= )
+	declare -Ar args_array=( [m]=app_message= [r]=recipients= [t]=type= )
 	local app_message
 	local recipients
+	local type
 	# Manage arguments with getopts
 	ynh_handle_getopts_args "$@"
-	local app_message="${app_message:-...No specific information...}"
-	local recipients="${recipients:-root}"
+	app_message="${app_message:-...No specific information...}"
+	recipients="${recipients:-root}"
+	type="${type:-install}"
 
 	# Retrieve the email of users
 	find_mails () {
@@ -670,7 +673,23 @@ ynh_send_readme_to_admin() {
 	}
 	recipients=$(find_mails "$recipients")
 
-	local mail_subject="☁️🆈🅽🅷☁️: \`$app\` was just installed!"
+	# Subject base
+	local mail_subject="☁️🆈🅽🅷☁️: \`$app\`"
+
+	# Adapt the subject according to the type of mail required.
+	if [ "$type" = "backup" ]; then
+		mail_subject="$mail_subject has just been backup."
+	elif [ "$type" = "change_url" ]; then
+		mail_subject="$mail_subject has just been moved to a new URL!"
+	elif [ "$type" = "remove" ]; then
+		mail_subject="$mail_subject has just been removed!"
+	elif [ "$type" = "restore" ]; then
+		mail_subject="$mail_subject has just been restored!"
+	elif [ "$type" = "upgrade" ]; then
+		mail_subject="$mail_subject has just been upgraded!"
+	else	# install
+		mail_subject="$mail_subject has just been installed!"
+	fi
 
 	local mail_message="This is an automated message from your beloved YunoHost server.
 
