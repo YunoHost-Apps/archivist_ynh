@@ -264,7 +264,7 @@ ynh_multimedia_build_main_dir () {
 	local checksum="806a827ba1902d6911095602a9221181"
 
 	# Download yunohost.multimedia scripts
-	wget -nv https://github.com/YunoHost-Apps/yunohost.multimedia/archive/${ynh_media_release}.tar.gz 
+	wget -nv https://github.com/YunoHost-Apps/yunohost.multimedia/archive/${ynh_media_release}.tar.gz
 
 	# Check the control sum
 	echo "${checksum} ${ynh_media_release}.tar.gz" | md5sum -c --status \
@@ -607,6 +607,7 @@ ynh_systemd_action() {
 		if [ $i -eq $timeout ]
 		then
 			echo "The service $service_name didn't fully started before the timeout." >&2
+			echo "Please find here an extract of the end of the log of the service $service_name:"
 			journalctl --lines=$length -u $service_name >&2
 			test -n "$log_path" && echo "--" && tail --lines=$length "$log_path" >&2
 		fi
@@ -847,10 +848,16 @@ ynh_download_file () {
 
 	# Load value from configuration file (see above for a small doc about this file
 	# format)
-	local file_url=$(grep 'FILE_URL=' "$YNH_CWD/../conf/${source_id}.src_file" | cut -d= -f2-)
-	local file_sum=$(grep 'FILE_SUM=' "$YNH_CWD/../conf/${source_id}.src_file" | cut -d= -f2-)
-	local file_sumprg=$(grep 'FILE_SUM_PRG=' "$YNH_CWD/../conf/${source_id}.src_file" | cut -d= -f2-)
-	local filename=$(grep 'FILENAME=' "$YNH_CWD/../conf/${source_id}.src_file" | cut -d= -f2-)
+	local src_file="$YNH_CWD/../conf/${source_id}.src_file"
+	# If the src_file doesn't exist, use the backup path instead, with a "settings" directory
+	if [ ! -e "$src_file" ]
+	then
+		src_file="$YNH_CWD/../settings/conf/${source_id}.src_file"
+	fi
+	local file_url=$(grep 'FILE_URL=' "$src_file" | cut -d= -f2-)
+	local file_sum=$(grep 'FILE_SUM=' "$src_file" | cut -d= -f2-)
+	local file_sumprg=$(grep 'FILE_SUM_PRG=' "$src_file" | cut -d= -f2-)
+	local filename=$(grep 'FILENAME=' "$src_file" | cut -d= -f2-)
 
 	# Default value
 	file_sumprg=${file_sumprg:-sha256sum}
@@ -872,7 +879,7 @@ ynh_download_file () {
 
 	# Create the destination directory, if it's not already.
 	mkdir -p "$dest_dir"
-	
+
 	# Move the file to its destination
 	mv $filename $dest_dir
 }
