@@ -8,13 +8,8 @@
 
 source _common.sh
 source /usr/share/yunohost/helpers
-
-#=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+# Load common variables for all scripts.
+source _variables
 
 #=================================================
 # LOAD SETTINGS
@@ -94,6 +89,12 @@ then
 fi
 
 #=================================================
+# UPGRADE DEPENDENCIES
+#=================================================
+
+ynh_install_app_dependencies $app_depencencies
+
+#=================================================
 # SPECIFIC UPGRADE
 #=================================================
 # STRETCH COMPATIBILITY
@@ -120,14 +121,19 @@ then
 	ynh_replace_string "__APP__" "$app" /etc/cron.d/$app
 	if [ "$frequency" = "Daily" ]; then
 		cron_freq="0 2 * * *"
+		run_freq="every day"
 	elif [ "$frequency" = "Each 3 days" ]; then
 		cron_freq="0 2 */3 * *"
+		run_freq="each 3 days"
 	elif [ "$frequency" = "Weekly" ]; then
 		cron_freq="0 2 * * 0"
+		run_freq="once a week on sunday"
 	elif [ "$frequency" = "Biweekly" ]; then
 		cron_freq="0 2 * * 0/2"
+		run_freq="one sunday out of two"
 	else	# Monthly
 		cron_freq="0 2 1 * *"
+		run_freq="once a month on the first sunday"
 	fi
 	ynh_replace_string "__FREQUENCY__" "$cron_freq" /etc/cron.d/$app
 
@@ -148,5 +154,24 @@ ynh_use_logrotate --non-append
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-# Set right permissions for curl installation
+# Set permissions on app files
 chown -R root: $final_path
+
+#=================================================
+# SEND A README FOR THE ADMIN
+#=================================================
+
+# Get main domain and buid the url of the admin panel of the app.
+admin_panel="https://$(grep portal_domain /etc/ssowat/conf.json | cut -d'"' -f4)/yunohost/admin/#/apps/$app"
+
+message="Archivist is going to run $run_freq.
+If you want to change the frequency, have a look to the file /etc/cron.d/$app.
+
+Please read the documentation (https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md) about the configuration of archivist for more information.
+
+You can configure this app easily by using the experimental config-panel feature: $admin_panel/config-panel.
+You can also find some specific actions for this app by using the experimental action feature: $admin_panel/actions.
+
+If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
+
+ynh_send_readme_to_admin --app_message="$message" --recipients="root" --type="upgrade"

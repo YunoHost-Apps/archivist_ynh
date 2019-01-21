@@ -43,6 +43,9 @@ Not relevant.
 * x86-64b - ![](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Community%29.svg)
 * ARMv8-A - ![](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Community%29.svg)
 * Jessie x86-64b - ![](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Community%29.svg)
+* x86-64b - [![](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Community%29.svg)](https://ci-apps.yunohost.org/ci/apps/archivist/)
+* ARMv8-A - [![](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Community%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/archivist/)
+* Jessie x86-64b - [![](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Community%29.svg)](https://ci-stretch.nohost.me/ci/apps/archivist/)
 
 ## Limitations
 
