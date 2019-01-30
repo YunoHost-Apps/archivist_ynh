@@ -6,7 +6,7 @@
 		"en": "Automatic backups.",
 		"fr": "Sauvegardes automatiques."
 	},
-	"version": "0.7~ynh2",
+	"version": "0.7~ynh3",
 	"url": "https://github.com/maniackcrudelis/archivist",
 	"license": "GPL-3.0",
 	"maintainer": {
@@ -14,7 +14,7 @@
 		"email": "maniackc_dev@crudelis.fr"
 	},
 	"requirements": {
-		"yunohost": ">= 3.3.3"
+		"yunohost": ">= 3.4"
 	},
 	"multi_instance": true,
 	"services": [],
