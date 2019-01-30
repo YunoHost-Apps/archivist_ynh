@@ -12,6 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # RETRIEVE ARGUMENTS
 #=================================================
+ynh_script_progression --message="Retrieve arguments from the manifest"
 
 app=${YNH_APP_INSTANCE_NAME:-$YNH_APP_ID}
 
@@ -30,5 +31,12 @@ final_path=$(ynh_app_setting_get $app final_path)
 #=================================================
 # FORCE A NEW BACKUP
 #=================================================
+ynh_script_progression --message="Force a new backup" --weight=9
 
 ynh_exec_warn nice -n10 $final_path/archivist.sh
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Execution completed" --last

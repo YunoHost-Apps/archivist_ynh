@@ -21,6 +21,7 @@ ynh_abort_if_errors
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Load settings"
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -38,6 +39,7 @@ test ! -d $final_path \
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
+ynh_script_progression --message="Restore the app main directory"
 
 ynh_restore_file "$final_path"
 
@@ -56,6 +58,7 @@ fi
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Reinstall dependencies" --weight=17
 
 # Valid the fucking debconf message
 # To find this, install the package, install also debconf-utils
@@ -100,3 +103,9 @@ You can also find some specific actions for this app by using the experimental a
 If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
 
 ynh_send_readme_to_admin --app_message="$message" --recipients="root" --type="restore"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Restoration completed" --last

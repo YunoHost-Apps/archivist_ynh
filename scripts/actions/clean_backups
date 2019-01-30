@@ -12,6 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # RETRIEVE ARGUMENTS
 #=================================================
+ynh_script_progression --message="Retrieve arguments from the manifest"
 
 app=${YNH_APP_INSTANCE_NAME:-$YNH_APP_ID}
 
@@ -30,6 +31,7 @@ final_path=$(ynh_app_setting_get $app final_path)
 #=================================================
 # CLEAN ALL BACKUP FILES
 #=================================================
+ynh_script_progression --message="Clean all backup files" --weight=9
 
 # Get the backup directory from the config file
 backup_dir="$(grep "^backup_dir=" "$final_path/Backup_list.conf" | cut -d= -f2)"
@@ -42,3 +44,9 @@ do
 		ynh_secure_remove "$directory"
 	fi
 done 3<<< $(find "$backup_dir" -maxdepth 1 -mindepth 1 -type d)
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Execution completed" --last

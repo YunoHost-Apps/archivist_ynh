@@ -21,6 +21,7 @@ ynh_abort_if_errors
 #=================================================
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
+ynh_script_progression --message="Retrieve arguments from the manifest"
 
 encrypt=$YNH_APP_ARG_ENCRYPT
 ynh_print_OFF; encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD; ynh_print_ON
@@ -33,6 +34,7 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
+ynh_script_progression --message="Check if the app can be installed"
 
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die "This path already contains a folder"
@@ -46,6 +48,7 @@ fi
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
+ynh_script_progression --message="Store settings from manifest" --weight=3
 
 ynh_app_setting_set $app frequency "$frequency"
 ynh_app_setting_set $app encrypt "$encrypt"
@@ -58,6 +61,7 @@ ynh_app_setting_set $app overwrite_cron "1"
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Install dependencies" --weight=15
 
 # Valid the fucking debconf message
 # To find this, install the package, install also debconf-utils
@@ -68,6 +72,7 @@ ynh_install_app_dependencies $app_depencencies
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression --message="Download, check and unpack source" --weight=3
 
 ynh_app_setting_set $app final_path $final_path
 # Download, check integrity, uncompress and patch the source from app.src
@@ -86,6 +91,7 @@ mkdir -p "$backup_dir"
 #=================================================
 # CONFIGURE ARCHIVIST
 #=================================================
+ynh_script_progression --message="Configure Archivist" --weight=2
 
 config_file="$final_path/Backup_list.conf"
 cp "$final_path/Backup_list.conf.default" "$config_file"
@@ -140,6 +146,7 @@ fi
 #=================================================
 # SET THE CRON FILE
 #=================================================
+ynh_script_progression --message="Set the cron file"
 
 cp ../conf/cron /etc/cron.d/$app
 ynh_replace_string "__FINALPATH__" "$final_path" /etc/cron.d/$app
@@ -177,6 +184,7 @@ chown -R root: $final_path
 #=================================================
 # SETUP LOGROTATE
 #=================================================
+ynh_script_progression --message="Configure logrotate"
 
 mkdir -p /var/log/$app
 # Use logrotate to manage application logfile(s)
@@ -221,3 +229,9 @@ If you're facing an issue or want to improve this app, please open a new issue i
 
 ynh_send_readme_to_admin --app_message="$message" --recipients="root" --type="install"
 ynh_print_ON
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Installation completed" --last

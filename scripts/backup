@@ -19,6 +19,7 @@ ynh_abort_if_errors
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Load settings"
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -29,6 +30,7 @@ final_path=$(ynh_app_setting_get $app final_path)
 #=================================================
 # BACKUP THE APP MAIN DIR
 #=================================================
+ynh_script_progression --message="Backup the app main dir"
 
 ynh_backup "$final_path"
 
@@ -37,11 +39,19 @@ ynh_backup "$final_path"
 #=================================================
 # BACKUP LOGROTATE
 #=================================================
+ynh_script_progression --message="Backup logrotate configuration"
 
 ynh_backup "/etc/logrotate.d/$app"
 
 #=================================================
 # BACKUP THE CRON FILE
 #=================================================
+ynh_script_progression --message="Backup cron file"
 
 ynh_backup "/etc/cron.d/$app"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Backup completed" --last

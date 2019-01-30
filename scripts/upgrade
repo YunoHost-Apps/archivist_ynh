@@ -14,6 +14,7 @@ source _variables
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Load settings" --weight=3
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -33,6 +34,7 @@ upgrade_type=$(ynh_check_app_version_changed)
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
+ynh_script_progression --message="Ensure downward compatibility"
 
 # If encrypt doesn't exist, create it
 if [ -z "$encrypt" ]; then
@@ -66,6 +68,7 @@ fi
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
+ynh_script_progression --message="Backup the app before upgrading" --weight=2
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -84,6 +87,7 @@ ynh_abort_if_errors
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
+	ynh_script_progression --message="Download, check and unpack source" --weight=2
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source "$final_path"
 fi
@@ -91,6 +95,7 @@ fi
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Upgrade dependencies" --weight=8
 
 ynh_install_app_dependencies $app_depencencies
 
@@ -109,6 +114,7 @@ fi
 #=================================================
 # UPDATE THE CRON FILE
 #=================================================
+ynh_script_progression --message="Update the cron file"
 
 # Overwrite the cron file only if it's allowed
 if [ $overwrite_cron -eq 1 ]
@@ -144,6 +150,7 @@ fi
 #=================================================
 # SETUP LOGROTATE
 #=================================================
+ynh_script_progression --message="Reconfigure logrotate"
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
@@ -175,3 +182,9 @@ You can also find some specific actions for this app by using the experimental a
 If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
 
 ynh_send_readme_to_admin --app_message="$message" --recipients="root" --type="upgrade"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Upgrade completed" --last
