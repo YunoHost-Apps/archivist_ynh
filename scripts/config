@@ -72,6 +72,11 @@ old_overwrite_cron="$(ynh_app_setting_get $app overwrite_cron)"
 old_overwrite_cron=$(bool_to_true_false $old_overwrite_cron)
 overwrite_cron="${YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON:-$old_overwrite_cron}"
 
+# Type of admin mail configuration
+old_admin_mail_html="$(ynh_app_setting_get $app admin_mail_html)"
+old_admin_mail_html=$(bool_to_true_false $old_admin_mail_html)
+admin_mail_html="${YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE:-$old_admin_mail_html}"
+
 #=================================================
 # SHOW_CONFIG FUNCTION FOR 'SHOW' COMMAND
 #=================================================
@@ -89,6 +94,8 @@ show_config() {
 	echo "YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE=$max_size"
 
 	echo "YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON=$overwrite_cron"
+
+	echo "YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE=$admin_mail_html"
 }
 
 #=================================================
@@ -157,6 +164,10 @@ apply_config() {
 	# Set overwrite_cron
 	overwrite_cron=$(bool_to_01 $overwrite_cron)
 	ynh_app_setting_set $app overwrite_cron "$overwrite_cron"
+
+	# Set admin_mail_html
+	admin_mail_html=$(bool_to_01 $admin_mail_html)
+	ynh_app_setting_set $app admin_mail_html "$admin_mail_html"
 }
 
 #=================================================

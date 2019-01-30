@@ -92,17 +92,17 @@ mkdir -p "/home/yunohost.app/${app}/backup"
 # Get main domain and buid the url of the admin panel of the app.
 admin_panel="https://$(grep portal_domain /etc/ssowat/conf.json | cut -d'"' -f4)/yunohost/admin/#/apps/$app"
 
-message="If you want to change the frequency of Archivist, have a look to the file /etc/cron.d/$app.
+echo "If you want to change the frequency of Archivist, have a look to the file /etc/cron.d/$app.
 
 The configuration file of Archivist has been restored at $final_path/Backup_list.conf
-Please read the documentation (https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md) about the configuration of archivist for more information.
+Please read the __URL_TAG1__documentation__URL_TAG2__https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md__URL_TAG3__ about the configuration of archivist for more information.
 
-You can configure this app easily by using the experimental config-panel feature: $admin_panel/config-panel.
-You can also find some specific actions for this app by using the experimental action feature: $admin_panel/actions.
+You can configure this app easily by using the experimental __URL_TAG1__config-panel feature__URL_TAG2__$admin_panel/config-panel__URL_TAG3__.
+You can also find some specific actions for this app by using the experimental __URL_TAG1__action feature__URL_TAG2__$admin_panel/actions__URL_TAG3__.
 
-If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
+If you're facing an issue or want to improve this app, please open a new issue in this __URL_TAG1__project__URL_TAG2__https://github.com/YunoHost-Apps/archivist_ynh__URL_TAG3__." > mail_to_send
 
-ynh_send_readme_to_admin --app_message="$message" --recipients="root" --type="restore"
+ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root" --type="restore"
 
 #=================================================
 # END OF SCRIPT
