@@ -14,6 +14,7 @@ source _variables
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Load settings" --weight=3
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -33,6 +34,7 @@ upgrade_type=$(ynh_check_app_version_changed)
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
+ynh_script_progression --message="Ensure downward compatibility"
 
 # If encrypt doesn't exist, create it
 if [ -z "$encrypt" ]; then
@@ -63,9 +65,17 @@ if [ -z "$overwrite_cron" ]; then
 	ynh_app_setting_set $app overwrite_cron $overwrite_cron
 fi
 
+admin_mail_html=$(ynh_app_setting_get $app admin_mail_html)
+# If admin_mail_html doesn't exist, create it
+if [ -z "$admin_mail_html" ]; then
+	admin_mail_html=1
+	ynh_app_setting_set $app admin_mail_html $admin_mail_html
+fi
+
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
+ynh_script_progression --message="Backup the app before upgrading" --weight=2
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -84,6 +94,7 @@ ynh_abort_if_errors
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
+	ynh_script_progression --message="Download, check and unpack source" --weight=2
 	# Download, check integrity, uncompress and patch the source from app.src
 	ynh_setup_source "$final_path"
 fi
@@ -91,6 +102,7 @@ fi
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Upgrade dependencies" --weight=8
 
 ynh_install_app_dependencies $app_depencencies
 
@@ -109,6 +121,7 @@ fi
 #=================================================
 # UPDATE THE CRON FILE
 #=================================================
+ynh_script_progression --message="Update the cron file"
 
 # Overwrite the cron file only if it's allowed
 if [ $overwrite_cron -eq 1 ]
@@ -144,6 +157,7 @@ fi
 #=================================================
 # SETUP LOGROTATE
 #=================================================
+ynh_script_progression --message="Reconfigure logrotate"
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
@@ -164,14 +178,28 @@ chown -R root: $final_path
 # Get main domain and buid the url of the admin panel of the app.
 admin_panel="https://$(grep portal_domain /etc/ssowat/conf.json | cut -d'"' -f4)/yunohost/admin/#/apps/$app"
 
-message="Archivist is going to run $run_freq.
+# Build the changelog
+ynh_app_changelog || true
+
+echo "Archivist is going to run $run_freq.
 If you want to change the frequency, have a look to the file /etc/cron.d/$app.
 
-Please read the documentation (https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md) about the configuration of archivist for more information.
+Please read the __URL_TAG1__documentation__URL_TAG2__https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md__URL_TAG3__ about the configuration of archivist for more information.
 
-You can configure this app easily by using the experimental config-panel feature: $admin_panel/config-panel.
-You can also find some specific actions for this app by using the experimental action feature: $admin_panel/actions.
+You can configure this app easily by using the experimental __URL_TAG1__config-panel feature__URL_TAG2__$admin_panel/config-panel__URL_TAG3__.
+You can also find some specific actions for this app by using the experimental __URL_TAG1__action feature__URL_TAG2__$admin_panel/actions__URL_TAG3__.
 
-If you're facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/archivist_ynh"
+If you're facing an issue or want to improve this app, please open a new issue in this __URL_TAG1__project__URL_TAG2__https://github.com/YunoHost-Apps/archivist_ynh__URL_TAG3__.
 
-ynh_send_readme_to_admin --app_message="$message" --recipients="root" --type="upgrade"
+---
+
+Changelog since your last upgrade:
+$(cat changelog)" > mail_to_send
+
+ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root" --type="upgrade"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Upgrade completed" --last

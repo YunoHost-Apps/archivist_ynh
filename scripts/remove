@@ -12,6 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Load settings" --weight=2
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -22,6 +23,7 @@ final_path=$(ynh_app_setting_get $app final_path)
 #=================================================
 # REMOVE DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Remove dependencies" --weight=7
 
 # Remove metapackage and its dependencies
 ynh_remove_app_dependencies
@@ -29,6 +31,7 @@ ynh_remove_app_dependencies
 #=================================================
 # REMOVE APP MAIN DIR
 #=================================================
+ynh_script_progression --message="Remove app main directory"
 
 # Remove the app directory securely
 ynh_secure_remove "$final_path"
@@ -36,6 +39,7 @@ ynh_secure_remove "$final_path"
 #=================================================
 # REMOVE LOGROTATE CONFIGURATION
 #=================================================
+ynh_script_progression --message="Remove logrotate configuration"
 
 # Remove the app-specific logrotate config
 ynh_remove_logrotate
@@ -49,5 +53,13 @@ ynh_remove_logrotate
 # Remove a cron file
 ynh_secure_remove "/etc/cron.d/$app"
 
+ynh_script_progression --message="Remove backup directory" --weight=5
+
 # Remove the backup directory
 ynh_secure_remove "/home/yunohost.app/${app}/backup"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Deletion completed" --last
