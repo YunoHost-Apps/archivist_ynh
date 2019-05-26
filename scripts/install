@@ -21,7 +21,6 @@ ynh_abort_if_errors
 #=================================================
 # RETRIEVE ARGUMENTS FROM THE MANIFEST
 #=================================================
-ynh_script_progression --message="Retrieve arguments from the manifest"
 
 encrypt=$YNH_APP_ARG_ENCRYPT
 ynh_print_OFF; encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD; ynh_print_ON
@@ -34,36 +33,36 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-ynh_script_progression --message="Check if the app can be installed"
+ynh_script_progression --message="Validating installation parameters..."
 
 final_path=/opt/yunohost/$app
-test ! -e "$final_path" || ynh_die "This path already contains a folder"
+test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
 if [ $encrypt -eq 1 ]; then
 	ynh_print_OFF
-	test -n "$encryption_pwd" || ynh_die "encryption_pwd can't be empty if you choose to enable encryption."
+	test -n "$encryption_pwd" || ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
 	ynh_print_ON
 fi
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
-ynh_script_progression --message="Store settings from manifest" --weight=3
+ynh_script_progression --message="Storing installation settings..." --weight=3
 
-ynh_app_setting_set $app frequency "$frequency"
-ynh_app_setting_set $app encrypt "$encrypt"
-ynh_app_setting_set $app core_backup "$core_backup"
-ynh_app_setting_set $app apps_backup "$apps_backup"
+ynh_app_setting_set --app=$app --key=frequency --value="$frequency"
+ynh_app_setting_set --app=$app --key=encrypt --value="$encrypt"
+ynh_app_setting_set --app=$app --key=core_backup --value="$core_backup"
+ynh_app_setting_set --app=$app --key=apps_backup --value="$apps_backup"
 
-ynh_app_setting_set $app overwrite_cron "1"
-ynh_app_setting_set $app admin_mail_html "1"
+ynh_app_setting_set --app=$app --key=overwrite_cron --value=1
+ynh_app_setting_set --app=$app --key=admin_mail_html --value=1
 
 #=================================================
 # STANDARD MODIFICATIONS
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Install dependencies" --weight=15
+ynh_script_progression --message="Installing dependencies..." --weight=15
 
 # Valid the fucking debconf message
 # To find this, install the package, install also debconf-utils
@@ -74,11 +73,11 @@ ynh_install_app_dependencies $app_depencencies
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Download, check and unpack source" --weight=3
+ynh_script_progression --message="Setting up source files..." --weight=3
 
-ynh_app_setting_set $app final_path $final_path
+ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source "$final_path"
+ynh_setup_source --dest_dir="$final_path"
 
 #=================================================
 # SPECIFIC SETUP
@@ -93,13 +92,13 @@ mkdir -p "$backup_dir"
 #=================================================
 # CONFIGURE ARCHIVIST
 #=================================================
-ynh_script_progression --message="Configure Archivist" --weight=2
+ynh_script_progression --message="Configuring Archivist..." --weight=2
 
 config_file="$final_path/Backup_list.conf"
 cp "$final_path/Backup_list.conf.default" "$config_file"
 
-ynh_replace_string "^backup_dir=.*" "backup_dir=$backup_dir" "$config_file"
-ynh_replace_string "^enc_backup_dir=.*" "enc_backup_dir=$enc_backup_dir" "$config_file"
+ynh_replace_string --match_string="^backup_dir=.*" --replace_string="backup_dir=$backup_dir" --target_file="$config_file"
+ynh_replace_string --match_string="^enc_backup_dir=.*" --replace_string="enc_backup_dir=$enc_backup_dir" --target_file="$config_file"
 
 if [ $encrypt -eq 1 ]
 then
@@ -112,8 +111,8 @@ else
 	encrypt=false
 	passkey=na
 fi
-ynh_replace_string "^encrypt=.*" "encrypt=$encrypt" "$config_file"
-ynh_replace_string "^cryptpass=.*" "cryptpass=$passkey" "$config_file"
+ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
+ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
 
 if [ $core_backup -eq 1 ]
 then
@@ -121,19 +120,19 @@ then
 else
 	core_backup=false
 fi
-ynh_replace_string "^ynh_core_backup=.*" "ynh_core_backup=$core_backup" "$config_file"
+ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$core_backup" --target_file="$config_file"
 
 if [ $apps_backup -eq 1 ]
 then
 	# Add all current applications to the backup
 	while read backup_app
 	do
-		ynh_replace_string "^ynh_app_backup=$" "ynh_app_backup=$backup_app\n&" "$config_file"
+		ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
 	done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
 fi
 
 # Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum "$config_file"
+ynh_store_file_checksum --file="$config_file"
 
 #=================================================
 # STRETCH COMPATIBILITY
@@ -141,18 +140,18 @@ ynh_store_file_checksum "$config_file"
 
 if is_stretch
 then
-	ynh_replace_string "yunohost backup create --ignore-apps" "yunohost backup create" "$final_path/archivist.sh"
-	ynh_replace_string "yunohost backup create --ignore-system" "yunohost backup create" "$final_path/archivist.sh"
+	ynh_replace_string --match_string="yunohost backup create --ignore-apps" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
+	ynh_replace_string --match_string="yunohost backup create --ignore-system" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
 fi
 
 #=================================================
 # SET THE CRON FILE
 #=================================================
-ynh_script_progression --message="Set the cron file"
+ynh_script_progression --message="Configuring the cron file..."
 
 cp ../conf/cron /etc/cron.d/$app
-ynh_replace_string "__FINALPATH__" "$final_path" /etc/cron.d/$app
-ynh_replace_string "__APP__" "$app" /etc/cron.d/$app
+ynh_replace_string --match_string="__FINALPATH__" --replace_string="$final_path" --target_file=/etc/cron.d/$app
+ynh_replace_string --match_string="__APP__" --replace_string=$app --target_file=/etc/cron.d/$app
 if [ "$frequency" = "Daily" ]; then
 	cron_freq="0 2 * * *"
 	run_freq="every day"
@@ -169,10 +168,10 @@ else	# Monthly
 	cron_freq="0 2 1 * *"
 	run_freq="once a month on the first sunday"
 fi
-ynh_replace_string "__FREQUENCY__" "$cron_freq" /etc/cron.d/$app
+ynh_replace_string --match_string="__FREQUENCY__" --replace_string="$cron_freq" --target_file=/etc/cron.d/$app
 
 # Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum "/etc/cron.d/$app"
+ynh_store_file_checksum --file="/etc/cron.d/$app"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -186,7 +185,7 @@ chown -R root: $final_path
 #=================================================
 # SETUP LOGROTATE
 #=================================================
-ynh_script_progression --message="Configure logrotate"
+ynh_script_progression --message="Configuring log rotation..."
 
 mkdir -p /var/log/$app
 # Use logrotate to manage application logfile(s)
@@ -196,10 +195,10 @@ ynh_use_logrotate
 # PRINT INFORMATION
 #=================================================
 
-Informations="To add recipients or to modify the files or apps to backup,
+Informations="
+To add recipients or to modify the files or apps to backup,
 please have a look to the config file $config_file"
-ynh_print_info "
-$Informations" >&2
+ynh_print_info --message="$Informations"
 
 #=================================================
 # SEND A README FOR THE ADMIN
@@ -222,7 +221,6 @@ admin_panel="https://$(grep portal_domain /etc/ssowat/conf.json | cut -d'"' -f4)
 ynh_print_OFF
 echo "${encrypt_message}Archivist is going to run $run_freq.
 If you want to change the frequency, have a look to the file /etc/cron.d/$app.
-
 $Informations
 Please read the __URL_TAG1__documentation__URL_TAG2__https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md__URL_TAG3__ about the configuration of archivist for more information.
 
@@ -232,10 +230,10 @@ You can also find some specific actions for this app by using the experimental _
 If you're facing an issue or want to improve this app, please open a new issue in this __URL_TAG1__project__URL_TAG2__https://github.com/YunoHost-Apps/archivist_ynh__URL_TAG3__." > mail_to_send
 ynh_print_ON
 
-ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root" --type="install"
+ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root" --type=install
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation completed" --last
+ynh_script_progression --message="Installation of $app completed" --last

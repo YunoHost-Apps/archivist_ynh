@@ -12,13 +12,12 @@ source /usr/share/yunohost/helpers
 #=================================================
 # RETRIEVE ARGUMENTS
 #=================================================
-ynh_script_progression --message="Retrieve arguments from the manifest"
 
 app=${YNH_APP_INSTANCE_NAME:-$YNH_APP_ID}
-final_path=$(ynh_app_setting_get $app final_path)
-encrypt=$(ynh_app_setting_get $app encrypt)
-core_backup=$(ynh_app_setting_get $app core_backup)
-apps_backup=$(ynh_app_setting_get $app apps_backup)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+encrypt=$(ynh_app_setting_get --app=$app --key=encrypt)
+core_backup=$(ynh_app_setting_get --app=$app --key=core_backup)
+apps_backup=$(ynh_app_setting_get --app=$app --key=apps_backup)
 
 #=================================================
 # SORT OUT THE CONFIG FILE TO HANDLE
@@ -35,10 +34,10 @@ fi
 #=================================================
 # RESET THE CONFIG FILE
 #=================================================
-ynh_script_progression --message="Reset the config file $file"
+ynh_script_progression --message="Reseting the config file $file"
 
 # Verify the checksum and backup the file if it's different
-ynh_backup_if_checksum_is_different "$config_file"
+ynh_backup_if_checksum_is_different --file="$config_file"
 
 if [ "$file" = "Backup_list.conf" ]
 then
@@ -48,8 +47,8 @@ then
 	# Recreate the default config
 	backup_dir="/home/yunohost.app/${app}/backup"
 	enc_backup_dir="/home/yunohost.app/${app}/encrypted_backup"
-	ynh_replace_string "^backup_dir=.*" "backup_dir=$backup_dir" "$config_file"
-	ynh_replace_string "^enc_backup_dir=.*" "enc_backup_dir=$enc_backup_dir" "$config_file"
+	ynh_replace_string --match_string="^backup_dir=.*" --replace_string="backup_dir=$backup_dir" --target_file="$config_file"
+	ynh_replace_string --match_string="^enc_backup_dir=.*" --replace_string="enc_backup_dir=$enc_backup_dir" --target_file="$config_file"
 
 	if [ $encrypt -eq 1 ]
 	then
@@ -59,8 +58,8 @@ then
 		encrypt=false
 		passkey=na
 	fi
-	ynh_replace_string "^encrypt=.*" "encrypt=$encrypt" "$config_file"
-	ynh_replace_string "^cryptpass=.*" "cryptpass=$passkey" "$config_file"
+	ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
+	ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
 
 	if [ $core_backup -eq 1 ]
 	then
@@ -68,20 +67,20 @@ then
 	else
 		core_backup=false
 	fi
-	ynh_replace_string "^ynh_core_backup=.*" "ynh_core_backup=$core_backup" "$config_file"
+	ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$core_backup" --target_file="$config_file"
 
 	if [ $apps_backup -eq 1 ]
 	then
 		# Add all current applications to the backup
 		while read backup_app
 		do
-			ynh_replace_string "^ynh_app_backup=$" "ynh_app_backup=$backup_app\n&" "$config_file"
+			ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
 		done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
 	fi
 fi
 
 # Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum "$config_file"
+ynh_store_file_checksum --file="$config_file"
 
 #=================================================
 # END OF SCRIPT

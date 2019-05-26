@@ -40,9 +40,9 @@ Non applicable
 
 #### Architectures supportées.
 
-* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Community%29.svg)](https://ci-apps.yunohost.org/ci/apps/archivist/)
-* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Community%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/archivist/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Community%29.svg)](https://ci-stretch.nohost.me/ci/apps/archivist/)
+* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/archivist/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/archivist/)
+* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Apps%29.svg)](https://ci-stretch.nohost.me/ci/apps/archivist/)
 
 ## Limitations
 
