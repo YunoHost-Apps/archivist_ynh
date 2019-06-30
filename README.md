@@ -15,7 +15,7 @@ It can also makes backups of specified directories.
 Your backups can be send to many other places, local or distant.  
 Archivist is automatically launched periodicaly to update your backups and send the modifications to the other places.
 
-**Shipped version:** 0.7
+**Shipped version:** 0.8
 
 ## Screenshots
 
@@ -40,12 +40,9 @@ Not relevant.
 
 #### Supported architectures
 
-* x86-64b - ![](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Community%29.svg)
-* ARMv8-A - ![](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Community%29.svg)
-* Jessie x86-64b - ![](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Community%29.svg)
-* x86-64b - [![](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Community%29.svg)](https://ci-apps.yunohost.org/ci/apps/archivist/)
-* ARMv8-A - [![](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Community%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/archivist/)
-* Jessie x86-64b - [![](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Community%29.svg)](https://ci-stretch.nohost.me/ci/apps/archivist/)
+* x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/archivist/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/archivist/)
+* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Apps%29.svg)](https://ci-stretch.nohost.me/ci/apps/archivist/)
 
 ## Limitations
 
