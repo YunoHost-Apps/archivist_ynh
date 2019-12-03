@@ -2,8 +2,13 @@ Changelog
 =========
 
 ## Unreleased
+- Nothing for now...
+
+## [1.0~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/21) - 2019-12-03
+
+#### Changed
 - [Use toml for config-panel and actions](https://github.com/YunoHost-Apps/archivist_ynh/pull/21/commits/21b7e746095a9dccf9dda9a58cc8ec5afdd87736)
-- [Update to v1.0 (Add support of BACKUP_CORE_ONLY)]()
+* [Update to v1.0 (Add support of BACKUP_CORE_ONLY)](https://github.com/YunoHost-Apps/archivist_ynh/pull/21/commits/9b3cfeab5b1260ce0d277f81bfd32e5326a2118d)
 
 ## [0.9~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/18) - 2019-08-12
 
