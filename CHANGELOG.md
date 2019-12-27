@@ -4,10 +4,15 @@ Changelog
 ## Unreleased
 - Nothing for now...
 
-## [1.0~ynh2](https://github.com/YunoHost-Apps/archivist_ynh/pull/) - 2019-12-05
+## [1.0.1~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/) - 2019-12-27
+
+#### Changed
+* [Update to v1.0.1 (b2 and encfs fixes)](https://github.com/YunoHost-Apps/archivist_ynh/pull//commits/)
+
+## [1.0~ynh2](https://github.com/YunoHost-Apps/archivist_ynh/pull/22) - 2019-12-05
 
 #### Fixed
-- [Add ccrypt to dependencies](https://github.com/YunoHost-Apps/archivist_ynh/pull//commits/)
+- [Add ccrypt to dependencies](https://github.com/YunoHost-Apps/archivist_ynh/pull/22/commits/b630fc838954169554d8153feb1c52b01d6ddf2a)
 
 ## [1.0~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/21) - 2019-12-03
 
