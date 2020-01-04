@@ -4,10 +4,10 @@ Changelog
 ## Unreleased
 - Nothing for now...
 
-## [1.0.1~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/) - 2019-12-27
+## [1.0.1~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/24) - 2019-12-27
 
 #### Changed
-* [Update to v1.0.1 (b2 and encfs fixes)](https://github.com/YunoHost-Apps/archivist_ynh/pull//commits/)
+* [Update to v1.0.1 (b2 and encfs fixes)](https://github.com/YunoHost-Apps/archivist_ynh/pull/24/commits/9e9c22141c5f0ac7ff23581d3a3feed7ee3b3ea9)
 
 ## [1.0~ynh2](https://github.com/YunoHost-Apps/archivist_ynh/pull/22) - 2019-12-05
 
