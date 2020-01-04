@@ -4,6 +4,11 @@ Changelog
 ## Unreleased
 - Nothing for now...
 
+## [1.0.1~ynh2](https://github.com/YunoHost-Apps/archivist_ynh/pull/25) - 2020-01-04
+
+#### Fixed
+- [Fix config-panel](https://github.com/YunoHost-Apps/archivist_ynh/pull/25/commits/f79549b5e0ca755fcda13ed8ea6d88b4ef623352)
+
 ## [1.0.1~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/24) - 2019-12-27
 
 #### Changed

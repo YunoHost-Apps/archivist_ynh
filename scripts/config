@@ -88,20 +88,20 @@ admin_mail_html="${YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE:-$old_admin_mail_htm
 
 show_config() {
 	# here you are supposed to read some config file/database/other then print the values
-	# echo "YNH_CONFIG_${PANEL_ID}_${SECTION_ID}_${OPTION_ID}=value"
+	# ynh_return "YNH_CONFIG_${PANEL_ID}_${SECTION_ID}_${OPTION_ID}=value"
 
-	echo "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPT=$encrypt"
-	echo "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD="
+	ynh_return "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPT=$encrypt"
+	ynh_return "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD="
 
-	echo "YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP=$ynh_core_backup"
-	echo "YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP=$ynh_app_backup"
+	ynh_return "YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP=$ynh_core_backup"
+	ynh_return "YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP=$ynh_app_backup"
 
-	echo "YNH_CONFIG_MAIN_BACKUP_OPTIONS_FREQUENCY=$frequency"
-	echo "YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE=$max_size"
+	ynh_return "YNH_CONFIG_MAIN_BACKUP_OPTIONS_FREQUENCY=$frequency"
+	ynh_return "YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE=$max_size"
 
-	echo "YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON=$overwrite_cron"
+	ynh_return "YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON=$overwrite_cron"
 
-	echo "YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE=$admin_mail_html"
+	ynh_return "YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE=$admin_mail_html"
 }
 
 #=================================================
