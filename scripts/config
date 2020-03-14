@@ -58,9 +58,9 @@ ynh_core_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP:-$old_ynh_core_backu
 # ynh_app_backup
 if [ -n "$(get_config_value ynh_app_backup)" ]
 then
-	old_ynh_app_backup="true"
+	old_ynh_app_backup="1"
 else
-	old_ynh_app_backup="false"
+	old_ynh_app_backup="0"
 fi
 ynh_app_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP:-$old_ynh_app_backup}"
 
@@ -74,12 +74,10 @@ max_size="${YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE:-$old_max_size}"
 
 # Overwrite cron file
 old_overwrite_cron="$(ynh_app_setting_get $app overwrite_cron)"
-old_overwrite_cron=$(bool_to_true_false $old_overwrite_cron)
 overwrite_cron="${YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON:-$old_overwrite_cron}"
 
 # Type of admin mail configuration
 old_admin_mail_html="$(ynh_app_setting_get $app admin_mail_html)"
-old_admin_mail_html=$(bool_to_true_false $old_admin_mail_html)
 admin_mail_html="${YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE:-$old_admin_mail_html}"
 
 #=================================================
@@ -115,7 +113,7 @@ apply_config() {
     #=================================================
 
 	# Change the password if needed
-	if [ "$encrypt" = "true" ]
+	if [ "$encrypt" = "1" ]
 	then
 		ynh_print_OFF
 		test -n "$encrypt_password" || ynh_die --message="The password for encryption can't be empty if you choose to enable encryption."
@@ -142,7 +140,7 @@ apply_config() {
 	ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$ynh_core_backup" --target_file="$config_file"
 
 	# Change ynh_app_backup in the config file
-	if [ "$ynh_app_backup" = "true" ] && [ "$old_ynh_app_backup" = "false" ]
+	if [ "$ynh_app_backup" = "1" ] && [ "$old_ynh_app_backup" = "0" ]
 	then
 		# If ynh_app_backup changed from false to true.
 		# Add all current applications to the backup
@@ -151,7 +149,7 @@ apply_config() {
 			ynh_print_info --message="Add a backup for the app $backup_app."
 			ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
 		done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
-	elif [ "$ynh_app_backup" = "false" ] && [ "$old_ynh_app_backup" = "true" ]
+	elif [ "$ynh_app_backup" = "0" ] && [ "$old_ynh_app_backup" = "1" ]
 	then
 		# Remove all app currently backup
 		# By deleting all line starting by 'ynh_app_backup=' and having something after '='
@@ -186,7 +184,6 @@ apply_config() {
     #=================================================
 
 	# Set overwrite_cron
-	overwrite_cron=$(bool_to_01 $overwrite_cron)
 	ynh_app_setting_set --app=$app --key=overwrite_cron --value="$overwrite_cron"
 
     #=================================================
@@ -194,7 +191,6 @@ apply_config() {
     #=================================================
 
 	# Set admin_mail_html
-	admin_mail_html=$(bool_to_01 $admin_mail_html)
 	ynh_app_setting_set --app=$app --key=admin_mail_html --value="$admin_mail_html"
 }
 
