@@ -10,10 +10,18 @@ source scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
 # RETRIEVE ARGUMENTS
 #=================================================
 
 app=${YNH_APP_INSTANCE_NAME:-$YNH_APP_ID}
+
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 encrypt=$(ynh_app_setting_get --app=$app --key=encrypt)
 core_backup=$(ynh_app_setting_get --app=$app --key=core_backup)

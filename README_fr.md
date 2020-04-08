@@ -1,6 +1,6 @@
 # Archivist pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist)  
+[![Niveau d'intégration](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist) ![](https://ci-apps.yunohost.org/ci/badges/archivist.status.svg) [![](https://ci-apps.yunohost.org/ci/badges/archivist.maintain.svg)](https://github.com/YunoHost/Apps/#what-to-do-if-i-cant-maintain-my-app-anymore-)  
 [![Installer archivist avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=archivist)
 
 *[Read this readme in english.](./README.md)*
@@ -42,7 +42,7 @@ Non applicable
 
 * x86-64b - [![Build Status](https://ci-apps.yunohost.org/ci/logs/archivist%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/archivist/)
 * ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/archivist%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/archivist/)
-* Jessie x86-64b - [![Build Status](https://ci-stretch.nohost.me/ci/logs/archivist%20%28Apps%29.svg)](https://ci-stretch.nohost.me/ci/apps/archivist/)
+* Buster x86-64b - [![Build Status](https://ci-buster.nohost.me/ci/logs/archivist%20%28Apps%29.svg)](https://ci-buster.nohost.me/ci/apps/archivist/)
 
 ## Limitations
 
