@@ -136,16 +136,6 @@ fi
 ynh_store_file_checksum --file="$config_file"
 
 #=================================================
-# STRETCH COMPATIBILITY
-#=================================================
-
-if is_stretch
-then
-	ynh_replace_string --match_string="yunohost backup create --ignore-apps" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
-	ynh_replace_string --match_string="yunohost backup create --ignore-system" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
-fi
-
-#=================================================
 # SET THE CRON FILE
 #=================================================
 ynh_script_progression --message="Configuring the cron file..."

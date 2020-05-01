@@ -110,16 +110,6 @@ ynh_install_app_dependencies $app_depencencies
 #=================================================
 # SPECIFIC UPGRADE
 #=================================================
-# STRETCH COMPATIBILITY
-#=================================================
-
-if is_stretch
-then
-	ynh_replace_string --match_string="yunohost backup create --ignore-apps" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
-	ynh_replace_string --match_string="yunohost backup create --ignore-system" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
-fi
-
-#=================================================
 # UPDATE THE CRON FILE
 #=================================================
 ynh_script_progression --message="Updating the cron file..."

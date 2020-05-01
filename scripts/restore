@@ -46,16 +46,6 @@ ynh_script_progression --message="Restoring the app main directory..."
 ynh_restore_file --origin_path="$final_path"
 
 #=================================================
-# STRETCH COMPATIBILITY
-#=================================================
-
-if is_stretch
-then
-	ynh_replace_string --match_string="yunohost backup create --ignore-apps" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
-	ynh_replace_string --match_string="yunohost backup create --ignore-system" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
-fi
-
-#=================================================
 # SPECIFIC RESTORATION
 #=================================================
 # REINSTALL DEPENDENCIES
