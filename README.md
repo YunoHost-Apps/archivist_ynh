@@ -54,3 +54,17 @@ Have a look to the [security audit](https://defuse.ca/audits/encfs.htm) to have 
  * Report a bug: https://github.com/YunoHost-Apps/archivist_ynh/issues
  * archivist website: https://github.com/maniackcrudelis/archivist
  * YunoHost website: https://yunohost.org/
+
+---
+
+Developers infos
+----------------
+
+Please do your pull request to the [testing branch](https://github.com/YunoHost-Apps/archivist_ynh/tree/testing).
+
+To try the testing branch, please proceed like that.
+```
+sudo yunohost app install https://github.com/YunoHost-Apps/archivist_ynh/tree/testing --force --debug
+or
+sudo yunohost app upgrade archivist -u https://github.com/YunoHost-Apps/archivist_ynh/tree/testing --debug
+```
