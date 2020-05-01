@@ -1,0 +1,109 @@
+#!/bin/bash
+
+#=================================================
+# GENERIC STARTING
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+# Load common variables for all scripts.
+source scripts/_variables
+
+source scripts/_common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+ynh_clean_setup () {
+# Clean installation remaining that are not handle by the remove script.
+    ynh_clean_check_starting
+}
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS
+#=================================================
+
+app=$YNH_APP_INSTANCE_NAME
+
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+frequency="$(ynh_app_setting_get --app=$app --key=frequency)"
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+ynh_script_progression --message="Resetting source files..." --time --weight=1
+
+# Download, check integrity, uncompress and patch the source from app.src
+(cd scripts; YNH_CWD=$PWD ynh_setup_source --dest_dir="$final_path")
+
+#=================================================
+# RECREATE DIRECTORY
+#=================================================
+
+backup_dir="/home/yunohost.app/${app}/backup"
+mkdir -p "$backup_dir"
+
+#=================================================
+# UPDATE THE CRON FILE
+#=================================================
+ynh_script_progression --message="Updating the cron file..."
+
+# Verify the checksum and backup the file if it's different
+ynh_backup_if_checksum_is_different --file="/etc/cron.d/$app"
+
+(cd scripts; cp ../conf/cron /etc/cron.d/$app)
+ynh_replace_string --match_string="__FINALPATH__" --replace_string="$final_path" --target_file=/etc/cron.d/$app
+ynh_replace_string --match_string="__APP__" --replace_string=$app --target_file=/etc/cron.d/$app
+if [ "$frequency" = "Daily" ]; then
+    cron_freq="0 2 * * *"
+    run_freq="every day"
+elif [ "$frequency" = "Each 3 days" ]; then
+    cron_freq="0 2 */3 * *"
+    run_freq="each 3 days"
+elif [ "$frequency" = "Weekly" ]; then
+    cron_freq="0 2 * * 0"
+    run_freq="once a week on sunday"
+elif [ "$frequency" = "Biweekly" ]; then
+    cron_freq="0 2 * * 0/2"
+    run_freq="one sunday out of two"
+else	# Monthly
+    cron_freq="0 2 1 * *"
+    run_freq="once a month on the first sunday"
+fi
+ynh_replace_string --match_string="__FREQUENCY__" --replace_string="$cron_freq" --target_file=/etc/cron.d/$app
+
+# Recalculate and store the config file checksum into the app settings
+ynh_store_file_checksum --file="/etc/cron.d/$app"
+
+#=================================================
+# RECONFIGURE ARCHIVIST
+#=================================================
+ynh_script_progression --message="Reconfiguring archivist..." --time --weight=1
+
+yunohost app action run $app reset_default_config
+
+#=================================================
+# SETUP LOGROTATE
+#=================================================
+ynh_script_progression --message="Resetting logrotate configuration..." --time --weight=1
+
+# Use logrotate to manage app-specific logfile(s)
+ynh_use_logrotate --non-append
+
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set permissions on app files
+chown -R root: $final_path
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Execution completed" --time --last

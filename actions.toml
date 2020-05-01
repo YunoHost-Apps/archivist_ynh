@@ -24,3 +24,12 @@ command = "/bin/bash scripts/actions/reset_default_config \"Backup_list.conf\""
 # accepted_return_codes = [0, 1, 2, 3]  # optional
 accepted_return_codes = [0]
 description = "Reset the config file Backup_list.conf."
+
+[reset_default_app]
+name = "Reset the app with a default configuration."
+command = "/bin/bash scripts/actions/reset_default_app"
+# user = "root"  # optional
+# cwd = "/" # optional
+# accepted_return_codes = [0, 1, 2, 3]  # optional
+accepted_return_codes = [0]
+description = "Reset the app to its default configuration to try to fix potential issues.<br>This action won't remove any data added to the app.<br>However, if you have modified any configuration, it will be overwritten."
