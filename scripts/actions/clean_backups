@@ -44,11 +44,11 @@ backup_dir="$(grep "^backup_dir=" "$final_path/Backup_list.conf" | cut -d= -f2)"
 
 while read directory <&3
 do
-	if [ -n "$directory" ]
-	then
-		ynh_print_info --message="Clean backup directory $directory"
-		ynh_secure_remove --file="$directory"
-	fi
+    if [ -n "$directory" ]
+    then
+        ynh_print_info --message="Clean backup directory $directory"
+        ynh_secure_remove --file="$directory"
+    fi
 done 3<<< $(find "$backup_dir" -maxdepth 1 -mindepth 1 -type d)
 
 #=================================================

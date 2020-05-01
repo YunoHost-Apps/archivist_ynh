@@ -39,38 +39,38 @@ ynh_script_progression --message="Ensuring downward compatibility..."
 
 # If encrypt doesn't exist, create it
 if [ -z "$encrypt" ]; then
-	encrypt="$(grep "^encrypt=" "$final_path/Backup_list.conf" | cut -d= -f2)"
-	if [ "$encrypt" = true ]; then
-		encrypt=1
-	else
-		encrypt=0
-	fi
-	ynh_app_setting_set --app=$app --key=encrypt --value=$encrypt
+    encrypt="$(grep "^encrypt=" "$final_path/Backup_list.conf" | cut -d= -f2)"
+    if [ "$encrypt" = true ]; then
+        encrypt=1
+    else
+        encrypt=0
+    fi
+    ynh_app_setting_set --app=$app --key=encrypt --value=$encrypt
 fi
 
 # If core_backup doesn't exist, create it
 if [ -z "$core_backup" ]; then
-	core_backup="$(grep "^ynh_core_backup=" "$final_path/Backup_list.conf" | cut -d= -f2)"
-	ynh_app_setting_set --app=$app --key=core_backup --value=$core_backup
+    core_backup="$(grep "^ynh_core_backup=" "$final_path/Backup_list.conf" | cut -d= -f2)"
+    ynh_app_setting_set --app=$app --key=core_backup --value=$core_backup
 fi
 
 # If apps_backup doesn't exist, create it
 if [ -z "$apps_backup" ]; then
-	apps_backup="$(grep --count --max-count=1 "^ynh_app_backup=" "$final_path/Backup_list.conf")"
-	ynh_app_setting_set --app=$app --key=apps_backup --value=$apps_backup
+    apps_backup="$(grep --count --max-count=1 "^ynh_app_backup=" "$final_path/Backup_list.conf")"
+    ynh_app_setting_set --app=$app --key=apps_backup --value=$apps_backup
 fi
 
 # If overwrite_cron doesn't exist, create it
 if [ -z "$overwrite_cron" ]; then
-	overwrite_cron=1
-	ynh_app_setting_set --app=$app --key=overwrite_cron --value=$overwrite_cron
+    overwrite_cron=1
+    ynh_app_setting_set --app=$app --key=overwrite_cron --value=$overwrite_cron
 fi
 
 admin_mail_html=$(ynh_app_setting_get --app=$app --key=admin_mail_html)
 # If admin_mail_html doesn't exist, create it
 if [ -z "$admin_mail_html" ]; then
-	admin_mail_html=1
-	ynh_app_setting_set --app=$app --key=admin_mail_html --value=$admin_mail_html
+    admin_mail_html=1
+    ynh_app_setting_set --app=$app --key=admin_mail_html --value=$admin_mail_html
 fi
 
 #=================================================
@@ -81,8 +81,8 @@ ynh_script_progression --message="Backing up the app before upgrading (may take 
 # Backup the current version of the app
 ynh_backup_before_upgrade
 ynh_clean_setup () {
-	# restore it if the upgrade fails
-	ynh_restore_upgradebackup
+    # restore it if the upgrade fails
+    ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
@@ -95,9 +95,9 @@ ynh_abort_if_errors
 
 if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
-	ynh_script_progression --message="Upgrading source files..." --weight=2
-	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path"
+    ynh_script_progression --message="Upgrading source files..." --weight=2
+    # Download, check integrity, uncompress and patch the source from app.src
+    ynh_setup_source --dest_dir="$final_path"
 fi
 
 #=================================================
@@ -127,32 +127,32 @@ ynh_script_progression --message="Updating the cron file..."
 # Overwrite the cron file only if it's allowed
 if [ $overwrite_cron -eq 1 ]
 then
-	# Verify the checksum and backup the file if it's different
-	ynh_backup_if_checksum_is_different --file="/etc/cron.d/$app"
+    # Verify the checksum and backup the file if it's different
+    ynh_backup_if_checksum_is_different --file="/etc/cron.d/$app"
 
-	cp ../conf/cron /etc/cron.d/$app
-	ynh_replace_string --match_string="__FINALPATH__" --replace_string="$final_path" --target_file=/etc/cron.d/$app
-	ynh_replace_string --match_string="__APP__" --replace_string=$app --target_file=/etc/cron.d/$app
-	if [ "$frequency" = "Daily" ]; then
-		cron_freq="0 2 * * *"
-		run_freq="every day"
-	elif [ "$frequency" = "Each 3 days" ]; then
-		cron_freq="0 2 */3 * *"
-		run_freq="each 3 days"
-	elif [ "$frequency" = "Weekly" ]; then
-		cron_freq="0 2 * * 0"
-		run_freq="once a week on sunday"
-	elif [ "$frequency" = "Biweekly" ]; then
-		cron_freq="0 2 * * 0/2"
-		run_freq="one sunday out of two"
-	else	# Monthly
-		cron_freq="0 2 1 * *"
-		run_freq="once a month on the first sunday"
-	fi
-	ynh_replace_string --match_string="__FREQUENCY__" --replace_string="$cron_freq" --target_file=/etc/cron.d/$app
+    cp ../conf/cron /etc/cron.d/$app
+    ynh_replace_string --match_string="__FINALPATH__" --replace_string="$final_path" --target_file=/etc/cron.d/$app
+    ynh_replace_string --match_string="__APP__" --replace_string=$app --target_file=/etc/cron.d/$app
+    if [ "$frequency" = "Daily" ]; then
+        cron_freq="0 2 * * *"
+        run_freq="every day"
+    elif [ "$frequency" = "Each 3 days" ]; then
+        cron_freq="0 2 */3 * *"
+        run_freq="each 3 days"
+    elif [ "$frequency" = "Weekly" ]; then
+        cron_freq="0 2 * * 0"
+        run_freq="once a week on sunday"
+    elif [ "$frequency" = "Biweekly" ]; then
+        cron_freq="0 2 * * 0/2"
+        run_freq="one sunday out of two"
+    else	# Monthly
+        cron_freq="0 2 1 * *"
+        run_freq="once a month on the first sunday"
+    fi
+    ynh_replace_string --match_string="__FREQUENCY__" --replace_string="$cron_freq" --target_file=/etc/cron.d/$app
 
-	# Recalculate and store the config file checksum into the app settings
-	ynh_store_file_checksum --file="/etc/cron.d/$app"
+    # Recalculate and store the config file checksum into the app settings
+    ynh_store_file_checksum --file="/etc/cron.d/$app"
 fi
 
 #=================================================
