@@ -7,8 +7,6 @@
 #=================================================
 
 # Load common variables for all scripts.
-source ../settings/scripts/_variables
-
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
@@ -66,7 +64,7 @@ ynh_script_progression --message="Reinstalling dependencies..." --weight=17
 # To find this, install the package, install also debconf-utils
 # Then use `debconf-get-selections | grep package`
 echo "encfs encfs/security-information boolean true" | debconf-set-selections
-ynh_install_app_dependencies $app_depencencies
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # RESTORE THE LOGROTATE CONFIGURATION
