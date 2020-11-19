@@ -25,7 +25,7 @@ No demo available.
 
 ## Configuration
 
-The configuration of archivist can be changed in the file /opt/yunohost/archivist/Backup_list.conf  
+The configuration of archivist can be changed in the file `/opt/yunohost/archivist/Backup_list.conf`  
 Please read the [documentation](https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md) about the configuration of archivist for more informations.
 
 ## Documentation
