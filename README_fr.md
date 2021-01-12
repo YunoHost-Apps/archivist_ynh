@@ -1,11 +1,11 @@
 # Archivist pour YunoHost
 
 [![Niveau d'intégration](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist) ![](https://ci-apps.yunohost.org/ci/badges/archivist.status.svg) [![](https://ci-apps.yunohost.org/ci/badges/archivist.maintain.svg)](https://github.com/YunoHost/Apps/#what-to-do-if-i-cant-maintain-my-app-anymore-)  
-[![Installer archivist avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=archivist)
+[![Installer Archivist avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=archivist)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer archivist rapidement et simplement sur un serveur YunoHost.  
+> *Ce package vous permet d'installer Archivist rapidement et simplement sur un serveur YunoHost.  
 Si vous n'avez pas YunoHost, merci de regarder [ici](https://yunohost.org/#/install_fr) pour savoir comment l'installer et en profiter.*
 
 ## Résumé
@@ -15,13 +15,7 @@ Il peut également faire des sauvegardes de répertoires spécifiques.
 Vos sauvegardes peuvent être envoyées à de nombreux autres endroits, locaux ou distants.  
 Archivist est automatiquement lancé périodiquement pour mettre à jour vos sauvegardes et envoyer les modifications aux autres emplacements.
 
-**Version embarquée:** 1.1
-
-## Captures d'écran
-
-## Démo
-
-Aucune démo pour cette application.
+**Version embarquée :** 1.1
 
 ## Configuration
 
@@ -30,7 +24,7 @@ Veuillez lire la [documentation](https://github.com/maniackcrudelis/archivist/bl
 
 ## Documentation
 
- * Documentation YunoHost: Il n'y a pas d'autre documentation, n'hésitez pas à contribuer.
+ * Documentation YunoHost : Il n'y a pas d'autre documentation, n'hésitez pas à contribuer.
 
 ## Fonctionnalités spécifiques à YunoHost
 
@@ -52,14 +46,13 @@ Consultez l'[audit de sécurité](https://defuse.ca/audits/encfs.htm) pour avoir
 
 ## Liens
 
- * Reporter un bug: https://github.com/YunoHost-Apps/archivist_ynh/issues
- * Site de archivist: https://github.com/maniackcrudelis/archivist
- * Site de YunoHost: https://yunohost.org/
+ * Reporter un bug : https://github.com/YunoHost-Apps/archivist_ynh/issues
+ * Site de archivist : https://github.com/maniackcrudelis/archivist
+ * Site de YunoHost : https://yunohost.org/
 
 ---
 
-Informations à l'intention des développeurs
-----------------
+## Informations pour les développeurs
 
 Merci de faire vos pull request sur la [branche testing](https://github.com/YunoHost-Apps/archivist_ynh/tree/testing).
 

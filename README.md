@@ -1,11 +1,11 @@
 # Archivist for YunoHost
 
 [![Integration level](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist) ![](https://ci-apps.yunohost.org/ci/badges/archivist.status.svg) [![](https://ci-apps.yunohost.org/ci/badges/archivist.maintain.svg)](https://github.com/YunoHost/Apps/#what-to-do-if-i-cant-maintain-my-app-anymore-)  
-[![Install archivist with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=archivist)
+[![Install Archivist with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=archivist)
 
 *[Lire ce readme en français.](./README_fr.md)*
 
-> *This package allow you to install archivist quickly and simply on a YunoHost server.  
+> *This package allow you to install Archivist quickly and simply on a YunoHost server.  
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
 
 ## Overview
@@ -16,12 +16,6 @@ Your backups can be send to many other places, local or distant.
 Archivist is automatically launched periodicaly to update your backups and send the modifications to the other places.
 
 **Shipped version:** 1.1
-
-## Screenshots
-
-## Demo
-
-No demo available.
 
 ## Configuration
 
@@ -56,8 +50,7 @@ Have a look to the [security audit](https://defuse.ca/audits/encfs.htm) to have 
 
 ---
 
-Developers infos
-----------------
+## Developers infos
 
 Please do your pull request to the [testing branch](https://github.com/YunoHost-Apps/archivist_ynh/tree/testing).
 

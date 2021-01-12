@@ -18,7 +18,7 @@ ynh_script_progression --message="Loading installation settings..." --weight=3
 app=$YNH_APP_INSTANCE_NAME
 
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-frequency="$(ynh_app_setting_get --app=$app --key=frequency)"
+frequency=$(ynh_app_setting_get --app=$app --key=frequency)
 encrypt=$(ynh_app_setting_get --app=$app --key=encrypt)
 core_backup=$(ynh_app_setting_get --app=$app --key=core_backup)
 apps_backup=$(ynh_app_setting_get --app=$app --key=apps_backup)

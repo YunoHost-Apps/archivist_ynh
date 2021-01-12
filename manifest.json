@@ -28,7 +28,7 @@
                 "name": "encrypt",
                 "type": "boolean",
                 "ask": {
-                    "en": "Do you want to encrypt your backups ?",
+                    "en": "Do you want to encrypt your backups?",
                     "fr": "Voulez-vous chiffrer vos sauvegardes ?"
                 },
                 "default": true
@@ -50,7 +50,7 @@
                 "name": "core_backup",
                 "type": "boolean",
                 "ask": {
-                    "en": "Would you like to backup your YunoHost core ?",
+                    "en": "Would you like to backup your YunoHost core?",
                     "fr": "Souhaitez-vous effectuer des sauvegardes du système YunoHost ?"
                 },
                 "default": true
@@ -59,7 +59,7 @@
                 "name": "apps_backup",
                 "type": "boolean",
                 "ask": {
-                    "en": "Would you like to backup your apps ?",
+                    "en": "Would you like to backup your apps?",
                     "fr": "Souhaitez-vous effectuer des sauvegardes de vos applications ?"
                 },
                 "default": true
@@ -68,7 +68,7 @@
                 "name": "frequency",
                 "type": "string",
                 "ask": {
-                    "en": "Choose the frequency of your backups ?",
+                    "en": "Choose the frequency of your backups?",
                     "fr": "Choississez la fréquence de votre backup ?"
                 },
                 "choices" : ["Daily", "Each 3 days", "Weekly", "Biweekly", "Monthly"],
