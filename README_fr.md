@@ -15,7 +15,7 @@ Il peut également faire des sauvegardes de répertoires spécifiques.
 Vos sauvegardes peuvent être envoyées à de nombreux autres endroits, locaux ou distants.  
 Archivist est automatiquement lancé périodiquement pour mettre à jour vos sauvegardes et envoyer les modifications aux autres emplacements.
 
-**Version embarquée:** 1.0.1
+**Version embarquée:** 1.1
 
 ## Captures d'écran
 
@@ -56,3 +56,17 @@ Consultez l'[audit de sécurité](https://defuse.ca/audits/encfs.htm) pour avoir
  * Reporter un bug: https://github.com/YunoHost-Apps/archivist_ynh/issues
  * Site de archivist: https://github.com/maniackcrudelis/archivist
  * Site de YunoHost: https://yunohost.org/
+
+---
+
+Informations à l'intention des développeurs
+----------------
+
+Merci de faire vos pull request sur la [branche testing](https://github.com/YunoHost-Apps/archivist_ynh/tree/testing).
+
+Pour tester la branche testing, merci de procéder ainsi.
+```
+sudo yunohost app install https://github.com/YunoHost-Apps/archivist_ynh/tree/testing --force --debug
+ou
+sudo yunohost app upgrade archivist -u https://github.com/YunoHost-Apps/archivist_ynh/tree/testing --debug
+```

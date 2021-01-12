@@ -40,9 +40,9 @@ final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
 if [ $encrypt -eq 1 ]; then
-	ynh_print_OFF
-	test -n "$encryption_pwd" || ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
-	ynh_print_ON
+    ynh_print_OFF
+    test -n "$encryption_pwd" || ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
+    ynh_print_ON
 fi
 
 #=================================================
@@ -103,47 +103,37 @@ ynh_replace_string --match_string="^enc_backup_dir=.*" --replace_string="enc_bac
 
 if [ $encrypt -eq 1 ]
 then
-	encrypt=true
+    encrypt=true
 
-	passkey="$final_path/passkey"
-	ynh_print_OFF; echo "$encryption_pwd" > "$passkey"; ynh_print_ON
-	chmod 400 "$passkey"
+    passkey="$final_path/passkey"
+    ynh_print_OFF; echo "$encryption_pwd" > "$passkey"; ynh_print_ON
+    chmod 400 "$passkey"
 else
-	encrypt=false
-	passkey=na
+    encrypt=false
+    passkey=na
 fi
 ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
 ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
 
 if [ $core_backup -eq 1 ]
 then
-	core_backup=true
+    core_backup=true
 else
-	core_backup=false
+    core_backup=false
 fi
 ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$core_backup" --target_file="$config_file"
 
 if [ $apps_backup -eq 1 ]
 then
-	# Add all current applications to the backup
-	while read backup_app
-	do
-		ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
-	done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
+    # Add all current applications to the backup
+    while read backup_app
+    do
+        ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
+    done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
 fi
 
 # Calculate and store the config file checksum into the app settings
 ynh_store_file_checksum --file="$config_file"
-
-#=================================================
-# STRETCH COMPATIBILITY
-#=================================================
-
-if is_stretch
-then
-	ynh_replace_string --match_string="yunohost backup create --ignore-apps" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
-	ynh_replace_string --match_string="yunohost backup create --ignore-system" --replace_string="yunohost backup create" --target_file="$final_path/archivist.sh"
-fi
 
 #=================================================
 # SET THE CRON FILE
@@ -154,20 +144,20 @@ cp ../conf/cron /etc/cron.d/$app
 ynh_replace_string --match_string="__FINALPATH__" --replace_string="$final_path" --target_file=/etc/cron.d/$app
 ynh_replace_string --match_string="__APP__" --replace_string=$app --target_file=/etc/cron.d/$app
 if [ "$frequency" = "Daily" ]; then
-	cron_freq="0 2 * * *"
-	run_freq="every day"
+    cron_freq="0 2 * * *"
+    run_freq="every day"
 elif [ "$frequency" = "Each 3 days" ]; then
-	cron_freq="0 2 */3 * *"
-	run_freq="each 3 days"
+    cron_freq="0 2 */3 * *"
+    run_freq="each 3 days"
 elif [ "$frequency" = "Weekly" ]; then
-	cron_freq="0 2 * * 0"
-	run_freq="once a week on sunday"
+    cron_freq="0 2 * * 0"
+    run_freq="once a week on sunday"
 elif [ "$frequency" = "Biweekly" ]; then
-	cron_freq="0 2 * * 0/2"
-	run_freq="one sunday out of two"
+    cron_freq="0 2 * * 0/2"
+    run_freq="one sunday out of two"
 else	# Monthly
-	cron_freq="0 2 1 * *"
-	run_freq="once a month on the first sunday"
+    cron_freq="0 2 1 * *"
+    run_freq="once a month on the first sunday"
 fi
 ynh_replace_string --match_string="__FREQUENCY__" --replace_string="$cron_freq" --target_file=/etc/cron.d/$app
 
@@ -207,13 +197,13 @@ ynh_print_info --message="$Informations"
 
 if [ "$encrypt" = "true" ]
 then
-	ynh_print_OFF
-	encrypt_message="Your password for encryption is '$encryption_pwd'
+    ynh_print_OFF
+    encrypt_message="Your password for encryption is '$encryption_pwd'
 
 "
-	ynh_print_ON
+    ynh_print_ON
 else
-	encrypt_message=""
+    encrypt_message=""
 fi
 
 # Get main domain and buid the url of the admin panel of the app.
