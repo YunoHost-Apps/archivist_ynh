@@ -4,6 +4,18 @@ Changelog
 ## Unreleased
 - Nothing for now...
 
+## [1.1~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/29) - 2021-01-12
+
+#### Added
+- [Allow to choose compression algorithms](https://github.com/YunoHost-Apps/archivist_ynh/pull/29)
+
+#### Fixed
+- [Fix YunoHost 4.1 support](https://github.com/YunoHost-Apps/archivist_ynh/pull/29)
+
+#### Changed
+- [Force compression for YunoHost backups](https://github.com/YunoHost-Apps/archivist_ynh/pull/29)
+
+
 ## [1.0.1~ynh2](https://github.com/YunoHost-Apps/archivist_ynh/pull/25) - 2020-01-04
 
 #### Fixed

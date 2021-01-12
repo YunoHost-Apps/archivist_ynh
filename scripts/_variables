@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Dependencies
-app_depencencies="rsync encfs sshpass ccrypt"
+app_depencencies="rsync encfs sshpass ccrypt lzop zstd lzip"
