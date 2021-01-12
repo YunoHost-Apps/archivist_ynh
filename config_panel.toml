@@ -18,6 +18,19 @@ name = "Archivist configuration"
         optional = true
         help = "A password is needed if encryption is activated."
 
+    [main.compression]
+    name = "Compression algorithm"
+
+        [main.compression.ynh]
+        ask = "Choose the compression algorithm for YunoHost backups"
+        choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
+        default = "gzip"
+
+        [main.compression.files]
+        ask = "Choose the compression algorithm for files and directories backups"
+        choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
+        default = "gzip"
+
     [main.backup_types]
     name = "Backup"
 

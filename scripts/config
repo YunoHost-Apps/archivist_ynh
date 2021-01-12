@@ -51,6 +51,14 @@ old_encrypt_password="$(cat $passkey)"
 encrypt_password="${YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD:-$old_encrypt_password}"
 ynh_print_ON
 
+# Compression algorithms
+old_ynh_compression="$(get_config_value ynh_compression_mode)"
+old_ynh_compression=${old_ynh_compression:-gzip}
+ynh_compression="${YNH_CONFIG_MAIN_COMPRESSION_YNH:-$old_ynh_compression}"
+old_files_compression="$(get_config_value files_compression_mode)"
+old_files_compression=${old_files_compression:-gzip}
+files_compression="${YNH_CONFIG_MAIN_COMPRESSION_FILES:-$old_files_compression}"
+
 # ynh_core_backup
 old_ynh_core_backup="$(get_config_value ynh_core_backup)"
 ynh_core_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP:-$old_ynh_core_backup}"
@@ -90,6 +98,9 @@ show_config() {
 
     ynh_return "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPT=$encrypt"
     ynh_return "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD="
+
+    ynh_return "YNH_CONFIG_MAIN_COMPRESSION_YNH=$ynh_compression"
+    ynh_return "YNH_CONFIG_MAIN_COMPRESSION_FILES=$files_compression"
 
     ynh_return "YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP=$ynh_core_backup"
     ynh_return "YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP=$ynh_app_backup"
@@ -135,6 +146,37 @@ apply_config() {
     #=================================================
     # MODIFY SETTINGS
     #=================================================
+
+    # Change the compression algorithms
+    # Replace "No compression" by "none" for the config file
+    if [ "$ynh_compression" == "No compression" ]; then
+        ynh_compression=none
+    fi
+    if [ "$ynh_compression" != "$old_ynh_compression" ]
+    then
+        # Update the config, or add the config if not yet existing
+        if grep "^ynh_compression_mode=" "$config_file"
+        then
+            ynh_replace_string --match_string="^ynh_compression_mode=.*" --replace_string="ynh_compression_mode=$ynh_compression" --target_file="$config_file"
+        else
+            echo "ynh_compression_mode=$ynh_compression" >> "$config_file"
+        fi
+    fi
+    # Replace "No compression" by "none" for the config file
+    if [ "$files_compression" == "No compression" ]; then
+        files_compression=none
+    fi
+    if [ "$files_compression" != "$old_files_compression" ]
+    then
+        # Update the config, or add the config if not yet existing
+        if grep "^files_compression_mode=" "$config_file"
+        then
+            ynh_replace_string --match_string="^files_compression_mode=.*" --replace_string="files_compression_mode=$files_compression" --target_file="$config_file"
+        else
+            echo "files_compression_mode=$files_compression" >> "$config_file"
+        fi
+        
+    fi
 
     # Change ynh_core_backup in the config file
     ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$ynh_core_backup" --target_file="$config_file"
