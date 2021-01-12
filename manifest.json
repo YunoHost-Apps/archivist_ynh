@@ -10,11 +10,15 @@
     "url": "https://github.com/maniackcrudelis/archivist",
     "license": "GPL-3.0",
     "maintainer": {
+        "name": "None...",
+        "email": ""
+    },
+    "previous_maintainers": [{
         "name": "Maniack Crudelis",
         "email": "maniackc_dev@crudelis.fr"
-    },
+    }],
     "requirements": {
-        "yunohost": ">= 3.6.0"
+        "yunohost": ">= 4.1"
     },
     "multi_instance": true,
     "services": [],
