@@ -20,7 +20,7 @@ ynh_abort_if_errors
 # RETRIEVE ARGUMENTS
 #=================================================
 
-app=${YNH_APP_INSTANCE_NAME:-$YNH_APP_ID}
+app=$YNH_APP_INSTANCE_NAME
 
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 encrypt=$(ynh_app_setting_get --app=$app --key=encrypt)
@@ -34,7 +34,7 @@ apps_backup=$(ynh_app_setting_get --app=$app --key=apps_backup)
 file="$1"
 
 if [ "$file" = "Backup_list.conf" ]; then
-	config_file="$final_path/Backup_list.conf"
+    config_file="$final_path/Backup_list.conf"
 fi
 
 #=================================================
@@ -49,42 +49,42 @@ ynh_backup_if_checksum_is_different --file="$config_file"
 
 if [ "$file" = "Backup_list.conf" ]
 then
-	# Get the default file and overwrite the current config
-	cp "$final_path/Backup_list.conf.default" "$config_file"
+    # Get the default file and overwrite the current config
+    cp "$final_path/Backup_list.conf.default" "$config_file"
 
-	# Recreate the default config
-	backup_dir="/home/yunohost.app/${app}/backup"
-	enc_backup_dir="/home/yunohost.app/${app}/encrypted_backup"
-	ynh_replace_string --match_string="^backup_dir=.*" --replace_string="backup_dir=$backup_dir" --target_file="$config_file"
-	ynh_replace_string --match_string="^enc_backup_dir=.*" --replace_string="enc_backup_dir=$enc_backup_dir" --target_file="$config_file"
+    # Recreate the default config
+    backup_dir="/home/yunohost.app/${app}/backup"
+    enc_backup_dir="/home/yunohost.app/${app}/encrypted_backup"
+    ynh_replace_string --match_string="^backup_dir=.*" --replace_string="backup_dir=$backup_dir" --target_file="$config_file"
+    ynh_replace_string --match_string="^enc_backup_dir=.*" --replace_string="enc_backup_dir=$enc_backup_dir" --target_file="$config_file"
 
-	if [ $encrypt -eq 1 ]
-	then
-		encrypt=true
-		passkey="$final_path/passkey"
-	else
-		encrypt=false
-		passkey=na
-	fi
-	ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
-	ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
+    if [ $encrypt -eq 1 ]
+    then
+        encrypt=true
+        passkey="$final_path/passkey"
+    else
+        encrypt=false
+        passkey=na
+    fi
+    ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
+    ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
 
-	if [ $core_backup -eq 1 ]
-	then
-		core_backup=true
-	else
-		core_backup=false
-	fi
-	ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$core_backup" --target_file="$config_file"
+    if [ $core_backup -eq 1 ]
+    then
+        core_backup=true
+    else
+        core_backup=false
+    fi
+    ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$core_backup" --target_file="$config_file"
 
-	if [ $apps_backup -eq 1 ]
-	then
-		# Add all current applications to the backup
-		while read backup_app
-		do
-			ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
-		done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
-	fi
+    if [ $apps_backup -eq 1 ]
+    then
+        # Add all current applications to the backup
+        while read backup_app
+        do
+            ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
+        done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
+    fi
 fi
 
 # Calculate and store the config file checksum into the app settings

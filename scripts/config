@@ -13,7 +13,7 @@ source /usr/share/yunohost/helpers
 # RETRIEVE ARGUMENTS
 #=================================================
 
-app=${YNH_APP_INSTANCE_NAME:-$YNH_APP_ID}
+app=$YNH_APP_INSTANCE_NAME
 
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
@@ -27,9 +27,9 @@ config_file="$final_path/Backup_list.conf"
 passkey="$final_path/passkey"
 
 get_config_value() {
-	option_name="$1"
-	# Get the value of this option in the config file
-	grep "^$option_name=" "$config_file" | cut -d= -f2
+    option_name="$1"
+    # Get the value of this option in the config file
+    grep "^$option_name=" "$config_file" | cut -d= -f2
 }
 
 #=================================================
@@ -51,6 +51,14 @@ old_encrypt_password="$(cat $passkey)"
 encrypt_password="${YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD:-$old_encrypt_password}"
 ynh_print_ON
 
+# Compression algorithms
+old_ynh_compression="$(get_config_value ynh_compression_mode)"
+old_ynh_compression=${old_ynh_compression:-gzip}
+ynh_compression="${YNH_CONFIG_MAIN_COMPRESSION_YNH:-$old_ynh_compression}"
+old_files_compression="$(get_config_value files_compression_mode)"
+old_files_compression=${old_files_compression:-gzip}
+files_compression="${YNH_CONFIG_MAIN_COMPRESSION_FILES:-$old_files_compression}"
+
 # ynh_core_backup
 old_ynh_core_backup="$(get_config_value ynh_core_backup)"
 ynh_core_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP:-$old_ynh_core_backup}"
@@ -58,9 +66,9 @@ ynh_core_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP:-$old_ynh_core_backu
 # ynh_app_backup
 if [ -n "$(get_config_value ynh_app_backup)" ]
 then
-	old_ynh_app_backup="1"
+    old_ynh_app_backup="1"
 else
-	old_ynh_app_backup="0"
+    old_ynh_app_backup="0"
 fi
 ynh_app_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP:-$old_ynh_app_backup}"
 
@@ -85,21 +93,24 @@ admin_mail_html="${YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE:-$old_admin_mail_htm
 #=================================================
 
 show_config() {
-	# here you are supposed to read some config file/database/other then print the values
-	# ynh_return "YNH_CONFIG_${PANEL_ID}_${SECTION_ID}_${OPTION_ID}=value"
+    # here you are supposed to read some config file/database/other then print the values
+    # ynh_return "YNH_CONFIG_${PANEL_ID}_${SECTION_ID}_${OPTION_ID}=value"
 
-	ynh_return "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPT=$encrypt"
-	ynh_return "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD="
+    ynh_return "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPT=$encrypt"
+    ynh_return "YNH_CONFIG_MAIN_ENCRYPTION_ENCRYPTION_PWD="
 
-	ynh_return "YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP=$ynh_core_backup"
-	ynh_return "YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP=$ynh_app_backup"
+    ynh_return "YNH_CONFIG_MAIN_COMPRESSION_YNH=$ynh_compression"
+    ynh_return "YNH_CONFIG_MAIN_COMPRESSION_FILES=$files_compression"
 
-	ynh_return "YNH_CONFIG_MAIN_BACKUP_OPTIONS_FREQUENCY=$frequency"
-	ynh_return "YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE=$max_size"
+    ynh_return "YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP=$ynh_core_backup"
+    ynh_return "YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP=$ynh_app_backup"
 
-	ynh_return "YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON=$overwrite_cron"
+    ynh_return "YNH_CONFIG_MAIN_BACKUP_OPTIONS_FREQUENCY=$frequency"
+    ynh_return "YNH_CONFIG_MAIN_BACKUP_OPTIONS_MAX_SIZE=$max_size"
 
-	ynh_return "YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE=$admin_mail_html"
+    ynh_return "YNH_CONFIG_MAIN_OVERWRITE_FILES_OVERWRITE_CRON=$overwrite_cron"
+
+    ynh_return "YNH_CONFIG_MAIN_GLOBAL_CONFIG_EMAIL_TYPE=$admin_mail_html"
 }
 
 #=================================================
@@ -112,86 +123,117 @@ apply_config() {
     # MODIFY THE PASSWORD
     #=================================================
 
-	# Change the password if needed
-	if [ "$encrypt" = "1" ]
-	then
-		ynh_print_OFF
-		test -n "$encrypt_password" || ynh_die --message="The password for encryption can't be empty if you choose to enable encryption."
-		ynh_print_ON
-		# Replace the password by the previous one
-		passkey="$final_path/passkey"
-		ynh_print_OFF; echo "$encrypt_password" > "$passkey"; ynh_print_ON
-		chmod 400 "$passkey"
-		ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
-	fi
+    # Change the password if needed
+    if [ "$encrypt" = "1" ]
+    then
+        ynh_print_OFF
+        test -n "$encrypt_password" || ynh_die --message="The password for encryption can't be empty if you choose to enable encryption."
+        ynh_print_ON
+        # Replace the password by the previous one
+        passkey="$final_path/passkey"
+        ynh_print_OFF; echo "$encrypt_password" > "$passkey"; ynh_print_ON
+        chmod 400 "$passkey"
+        ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
+    fi
 
     #=================================================
     # MODIFY ENCRYPT SETTING
     #=================================================
 
-	# Change encrypt in the config file
-	ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
+    # Change encrypt in the config file
+    ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
 
     #=================================================
     # MODIFY SETTINGS
     #=================================================
 
-	# Change ynh_core_backup in the config file
-	ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$ynh_core_backup" --target_file="$config_file"
+    # Change the compression algorithms
+    # Replace "No compression" by "none" for the config file
+    if [ "$ynh_compression" == "No compression" ]; then
+        ynh_compression=none
+    fi
+    if [ "$ynh_compression" != "$old_ynh_compression" ]
+    then
+        # Update the config, or add the config if not yet existing
+        if grep "^ynh_compression_mode=" "$config_file"
+        then
+            ynh_replace_string --match_string="^ynh_compression_mode=.*" --replace_string="ynh_compression_mode=$ynh_compression" --target_file="$config_file"
+        else
+            echo "ynh_compression_mode=$ynh_compression" >> "$config_file"
+        fi
+    fi
+    # Replace "No compression" by "none" for the config file
+    if [ "$files_compression" == "No compression" ]; then
+        files_compression=none
+    fi
+    if [ "$files_compression" != "$old_files_compression" ]
+    then
+        # Update the config, or add the config if not yet existing
+        if grep "^files_compression_mode=" "$config_file"
+        then
+            ynh_replace_string --match_string="^files_compression_mode=.*" --replace_string="files_compression_mode=$files_compression" --target_file="$config_file"
+        else
+            echo "files_compression_mode=$files_compression" >> "$config_file"
+        fi
+        
+    fi
 
-	# Change ynh_app_backup in the config file
-	if [ "$ynh_app_backup" = "1" ] && [ "$old_ynh_app_backup" = "0" ]
-	then
-		# If ynh_app_backup changed from false to true.
-		# Add all current applications to the backup
-		while read backup_app
-		do
-			ynh_print_info --message="Add a backup for the app $backup_app."
-			ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
-		done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
-	elif [ "$ynh_app_backup" = "0" ] && [ "$old_ynh_app_backup" = "1" ]
-	then
-		# Remove all app currently backup
-		# By deleting all line starting by 'ynh_app_backup=' and having something after '='
-		sed -i "/^ynh_app_backup=.\+$/d" "$config_file"
-	fi
+    # Change ynh_core_backup in the config file
+    ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$ynh_core_backup" --target_file="$config_file"
 
-	# Change frequency in the cron file and store the value into the settings
-	ynh_app_setting_set --app=$app --key=frequency --value="$frequency"
-	if [ "$frequency" = "Daily" ]; then
-		cron_freq="0 2 * * *"
-		run_freq="every day"
-	elif [ "$frequency" = "Each 3 days" ]; then
-		cron_freq="0 2 */3 * *"
-		run_freq="each 3 days"
-	elif [ "$frequency" = "Weekly" ]; then
-		cron_freq="0 2 * * 0"
-		run_freq="once a week on sunday"
-	elif [ "$frequency" = "Biweekly" ]; then
-		cron_freq="0 2 * * 0/2"
-		run_freq="one sunday out of two"
-	else	# Monthly
-		cron_freq="0 2 1 * *"
-		run_freq="once a month on the first sunday"
-	fi
-	ynh_replace_string --match_string=".* root" --replace_string="$cron_freq root" --target_file=/etc/cron.d/$app
+    # Change ynh_app_backup in the config file
+    if [ "$ynh_app_backup" = "1" ] && [ "$old_ynh_app_backup" = "0" ]
+    then
+        # If ynh_app_backup changed from false to true.
+        # Add all current applications to the backup
+        while read backup_app
+        do
+            ynh_print_info --message="Add a backup for the app $backup_app."
+            ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
+        done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
+    elif [ "$ynh_app_backup" = "0" ] && [ "$old_ynh_app_backup" = "1" ]
+    then
+        # Remove all app currently backup
+        # By deleting all line starting by 'ynh_app_backup=' and having something after '='
+        sed -i "/^ynh_app_backup=.\+$/d" "$config_file"
+    fi
 
-	# Change max_size in the config file
-	ynh_replace_string --match_string="^max_size=.*" --replace_string="max_size=$max_size" --target_file="$config_file"
+    # Change frequency in the cron file and store the value into the settings
+    ynh_app_setting_set --app=$app --key=frequency --value="$frequency"
+    if [ "$frequency" = "Daily" ]; then
+        cron_freq="0 2 * * *"
+        run_freq="every day"
+    elif [ "$frequency" = "Each 3 days" ]; then
+        cron_freq="0 2 */3 * *"
+        run_freq="each 3 days"
+    elif [ "$frequency" = "Weekly" ]; then
+        cron_freq="0 2 * * 0"
+        run_freq="once a week on sunday"
+    elif [ "$frequency" = "Biweekly" ]; then
+        cron_freq="0 2 * * 0/2"
+        run_freq="one sunday out of two"
+    else	# Monthly
+        cron_freq="0 2 1 * *"
+        run_freq="once a month on the first sunday"
+    fi
+    ynh_replace_string --match_string=".* root" --replace_string="$cron_freq root" --target_file=/etc/cron.d/$app
+
+    # Change max_size in the config file
+    ynh_replace_string --match_string="^max_size=.*" --replace_string="max_size=$max_size" --target_file="$config_file"
 
     #=================================================
     # MODIFY OVERWRITTING SETTINGS
     #=================================================
 
-	# Set overwrite_cron
-	ynh_app_setting_set --app=$app --key=overwrite_cron --value="$overwrite_cron"
+    # Set overwrite_cron
+    ynh_app_setting_set --app=$app --key=overwrite_cron --value="$overwrite_cron"
 
     #=================================================
     # MODIFY EMAIL SETTING
     #=================================================
 
-	# Set admin_mail_html
-	ynh_app_setting_set --app=$app --key=admin_mail_html --value="$admin_mail_html"
+    # Set admin_mail_html
+    ynh_app_setting_set --app=$app --key=admin_mail_html --value="$admin_mail_html"
 }
 
 #=================================================
@@ -201,6 +243,6 @@ apply_config() {
 #=================================================
 
 case $1 in
-  show) show_config;;
-  apply) apply_config;;
+show) show_config;;
+apply) apply_config;;
 esac

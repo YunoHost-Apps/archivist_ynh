@@ -47,6 +47,7 @@ ynh_backup --src_path="/etc/logrotate.d/$app"
 #=================================================
 # BACKUP THE CRON FILE
 #=================================================
+ynh_script_progression --message="Backing up cron file..."
 
 ynh_backup --src_path="/etc/cron.d/$app"
 
