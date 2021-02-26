@@ -4,6 +4,12 @@ Changelog
 ## Unreleased
 - Nothing for now...
 
+## [1.2~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/33) - 2021-02-26
+
+#### Added
+- [Allow symlink for no compression - archivist 1.2](https://github.com/YunoHost-Apps/archivist_ynh/pull/33)
+
+
 ## [1.1~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/29) - 2021-01-12
 
 #### Added
