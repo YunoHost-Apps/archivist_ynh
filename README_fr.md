@@ -15,7 +15,7 @@ Il peut également faire des sauvegardes de répertoires spécifiques.
 Vos sauvegardes peuvent être envoyées à de nombreux autres endroits, locaux ou distants.  
 Archivist est automatiquement lancé périodiquement pour mettre à jour vos sauvegardes et envoyer les modifications aux autres emplacements.
 
-**Version embarquée:** 1.3
+**Version embarquée:** 1.3.1
 
 ## Captures d'écran
 
