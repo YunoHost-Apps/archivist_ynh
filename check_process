@@ -38,8 +38,6 @@
     ; Checks
         setup_nourl=1
         actions=1
-;;; Levels
-    Level 5=auto
 ;;; Options
 Email=
 Notification=change
