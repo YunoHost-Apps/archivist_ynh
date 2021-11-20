@@ -127,7 +127,7 @@ then
     while read backup_app
     do
         ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
-    done <<< "$(yunohost app list | grep id: | sed 's/.*id: //')"
+    done <<< "$(yunohost app list | grep -q 'id: $app' | sed 's/.*id: //')"
 fi
 
 # Calculate and store the config file checksum into the app settings
@@ -195,11 +195,10 @@ ynh_print_info --message="$Informations"
 
 if [ "$encrypt" = "true" ]
 then
-    ynh_print_OFF
     encrypt_message="Your password for encryption is '$encryption_pwd'
 
 "
-    ynh_print_ON
+
 else
     encrypt_message=""
 fi
@@ -207,7 +206,6 @@ fi
 # Get main domain and buid the url of the admin panel of the app.
 admin_panel="https://$(grep portal_domain /etc/ssowat/conf.json | cut -d'"' -f4)/yunohost/admin/#/apps/$app"
 
-ynh_print_OFF
 echo "${encrypt_message}Archivist is going to run $run_freq.
 If you want to change the frequency, have a look to the file /etc/cron.d/$app.
 $Informations
@@ -217,7 +215,6 @@ You can configure this app easily by using the experimental __URL_TAG1__config-p
 You can also find some specific actions for this app by using the experimental __URL_TAG1__action feature__URL_TAG2__$admin_panel/actions__URL_TAG3__.
 
 If you're facing an issue or want to improve this app, please open a new issue in this __URL_TAG1__project__URL_TAG2__https://github.com/YunoHost-Apps/archivist_ynh__URL_TAG3__." > mail_to_send
-ynh_print_ON
 
 ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root" --type=install
 
