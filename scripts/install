@@ -127,7 +127,7 @@ then
     while read backup_app
     do
         ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
-    done <<< "$(yunohost app list | grep -q 'id: $app' | sed 's/.*id: //')"
+    done <<< "$(yunohost app list | grep 'id:' | sed 's/.*id: //')"
 fi
 
 # Calculate and store the config file checksum into the app settings
