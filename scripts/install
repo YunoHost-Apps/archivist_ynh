@@ -22,7 +22,7 @@ ynh_abort_if_errors
 #=================================================
 
 encrypt=$YNH_APP_ARG_ENCRYPT
-ynh_print_OFF; encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD; ynh_print_ON
+encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD
 core_backup=$YNH_APP_ARG_CORE_BACKUP
 apps_backup=$YNH_APP_ARG_APPS_BACKUP
 frequency="$YNH_APP_ARG_FREQUENCY"
@@ -38,9 +38,7 @@ final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
 if [ $encrypt -eq 1 ]; then
-    ynh_print_OFF
     test -n "$encryption_pwd" || ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
-    ynh_print_ON
 fi
 
 #=================================================
@@ -104,7 +102,7 @@ then
     encrypt=true
 
     passkey="$final_path/passkey"
-    ynh_print_OFF; echo "$encryption_pwd" > "$passkey"; ynh_print_ON
+    echo "$encryption_pwd" > "$passkey"
     chmod 400 "$passkey"
 else
     encrypt=false
