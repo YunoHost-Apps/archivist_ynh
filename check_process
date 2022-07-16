@@ -1,47 +1,47 @@
 ;; Test complet
-    ; Manifest
-        encrypt=1
-        encryption_pwd="password"
-        core_backup=1
-        apps_backup=1
-        frequency="Weekly"
-    ; Config_panel
-        main.encryption.encrypt=1|0
-        main.encryption.encryption_pwd=password1|password2
-        main.backup_types.core_backup=1|0
-        main.backup_types.apps_backup=1|0
-        main.backup_options.frequency=Daily|Each 3 days|Weekly|Biweekly|Monthly
-        main.backup_options.max_size=1000
-        main.overwrite_files.overwrite_cron=1|0
-        main.global_config.email_type=1|0
-    ; Checks
-        pkg_linter=1
-        setup_sub_dir=0
-        setup_root=0
-        setup_nourl=1
-        setup_private=0
-        setup_public=0
-        upgrade=1
-        upgrade=1	from_commit=2b2793737d5e1374659cbb74838d10162a2147e6
-        backup_restore=1
-        multi_instance=1
-        port_already_use=0
-        change_url=0
-        config_panel=0
+	; Manifest
+		encrypt=1
+		encryption_pwd="password"
+		core_backup=1
+		apps_backup=1
+		frequency="Weekly"
+	; Config_panel
+		main.encryption.encrypt=1|0
+		main.encryption.encryption_pwd=password1|password2
+		main.backup_types.core_backup=1|0
+		main.backup_types.apps_backup=1|0
+		main.backup_options.frequency=Daily|Each 3 days|Weekly|Biweekly|Monthly
+		main.backup_options.max_size=1000
+		main.overwrite_files.overwrite_cron=1|0
+		main.global_config.email_type=1|0
+	; Checks
+		pkg_linter=1
+		setup_sub_dir=0
+		setup_root=0
+		setup_nourl=1
+		setup_private=0
+		setup_public=0
+		upgrade=1
+		upgrade=1	from_commit=2b2793737d5e1374659cbb74838d10162a2147e6
+		backup_restore=1
+		multi_instance=1
+		port_already_use=0
+		change_url=0
+		config_panel=0
 ;; Test actions without encryption
 # Actions can't be tested with the encryption on, because LXC does not support fuse.
-    ; Manifest
-        encrypt=0
-        encryption_pwd=""
-        core_backup=1
-        apps_backup=1
-    ; Checks
-        setup_nourl=1
-        actions=1
+	; Manifest
+		encrypt=0
+		encryption_pwd=""
+		core_backup=1
+		apps_backup=1
+	; Checks
+		setup_nourl=1
+		actions=1
 ;;; Options
 Email=
 Notification=change
 ;;; Upgrade options
-    ; commit=2b2793737d5e1374659cbb74838d10162a2147e6
-        name=03 Nov 2017 2b2793737d5e1374659cbb74838d10162a2147e6
-        manifest_arg=encrypt=1&encryption_pwd="password"&core_backup=1&apps_backup=1&frequency="Weekly"&
+	; commit=2b2793737d5e1374659cbb74838d10162a2147e6
+		name=03 Nov 2017 2b2793737d5e1374659cbb74838d10162a2147e6
+		manifest_arg=encrypt=1&encryption_pwd="password"&core_backup=1&apps_backup=1&frequency="Weekly"&
