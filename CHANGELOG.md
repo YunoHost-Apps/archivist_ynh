@@ -4,6 +4,16 @@ Changelog
 ## Unreleased
 - Nothing for now...
 
+## [1.3.2~ynh1]() - 2022-01-25
+
+#### Fixed
+- [Fix tar symlink for apps - archivist 1.3.2]()
+
+## [1.3.1~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/commit/a9070b11e13d37908cf246804c0d331a57fea115) - 2021-11-07
+
+#### Fixed
+- [Fix multimedia hook killing hard drives - archivist 1.3.1](https://github.com/YunoHost-Apps/archivist_ynh/commit/a9070b11e13d37908cf246804c0d331a57fea115)
+
 ## [1.3~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/pull/40) - 2021-05-27
 
 #### Fixed
