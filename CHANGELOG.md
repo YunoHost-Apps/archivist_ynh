@@ -4,10 +4,15 @@ Changelog
 ## Unreleased
 - Nothing for now...
 
+## [1.3.3~ynh1]() - 2022-07-31
+
+#### Fixed
+- [ Fix encrypted exclusion - archivist 1.3.3]()
+
 ## [1.3.2~ynh1]() - 2022-01-25
 
 #### Fixed
-- [Fix tar symlink for apps - archivist 1.3.2]()
+- [Fix tar symlink for apps - archivist 1.3.2](https://github.com/YunoHost-Apps/archivist_ynh/commit/ec15b96d819fc9c263b3d7769acde108d3c7ad83)
 
 ## [1.3.1~ynh1](https://github.com/YunoHost-Apps/archivist_ynh/commit/a9070b11e13d37908cf246804c0d331a57fea115) - 2021-11-07
 
