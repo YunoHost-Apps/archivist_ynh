@@ -24,6 +24,7 @@ Archivist is automatically launched periodicaly to update your backups and send 
 
 
 **Shipped version:** 1.3.3~ynh1
+
 ## Disclaimers / important information
 
 ## Configuration

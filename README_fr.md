@@ -22,7 +22,8 @@ Vos sauvegardes peuvent être envoyées à de nombreux autres endroits, locaux o
 Archivist est automatiquement lancé périodiquement pour mettre à jour vos sauvegardes et envoyer les modifications aux autres emplacements.
 
 
-**Version incluse :** 1.3.3~ynh1
+**Version incluse :** 1.3.3~ynh1
+
 ## Avertissements / informations importantes
 
 ## Configuration
