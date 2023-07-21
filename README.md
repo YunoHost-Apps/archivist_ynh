@@ -5,7 +5,8 @@ It shall NOT be edited by hand.
 
 # Archivist for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist) ![Working status](https://ci-apps.yunohost.org/ci/badges/archivist.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/archivist.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist) ![Working status](https://ci-apps.yunohost.org/ci/badges/archivist.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/archivist.maintain.svg)
+
 [![Install Archivist with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=archivist)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -24,7 +25,6 @@ Archivist is automatically launched periodicaly to update your backups and send 
 
 
 **Shipped version:** 1.3.3~ynh1
-
 ## Disclaimers / important information
 
 ## Configuration
