@@ -5,7 +5,8 @@ It shall NOT be edited by hand.
 
 # Archivist for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist) ![Working status](https://ci-apps.yunohost.org/ci/badges/archivist.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/archivist.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/archivist.svg)](https://dash.yunohost.org/appci/app/archivist) ![Working status](https://ci-apps.yunohost.org/ci/badges/archivist.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/archivist.maintain.svg)
+
 [![Install Archivist with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=archivist)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -41,7 +42,7 @@ Have a look to the [security audit](https://defuse.ca/audits/encfs.htm) to have 
 
 * Official app website: <https://github.com/maniackcrudelis/archivist>
 * Upstream app code repository: <https://github.com/maniackcrudelis/archivist>
-* YunoHost documentation for this app: <https://yunohost.org/app_archivist>
+* YunoHost Store: <https://apps.yunohost.org/app/archivist>
 * Report a bug: <https://github.com/YunoHost-Apps/archivist_ynh/issues>
 
 ## Developer info
