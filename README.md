@@ -41,7 +41,7 @@ Have a look to the [security audit](https://defuse.ca/audits/encfs.htm) to have 
 ## Documentation and resources
 
 * Upstream app code repository: <https://github.com/maniackcrudelis/archivist>
-* YunoHost documentation for this app: <https://yunohost.org/app_archivist>
+* YunoHost Store: <https://apps.yunohost.org/app/archivist>
 * Report a bug: <https://github.com/YunoHost-Apps/archivist_ynh/issues>
 
 ## Developer info
