@@ -66,9 +66,9 @@ ynh_core_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_CORE_BACKUP:-$old_ynh_core_backu
 # ynh_app_backup
 if [ -n "$(get_config_value ynh_app_backup)" ]
 then
-    old_ynh_app_backup="1"
+    old_ynh_app_backup=true
 else
-    old_ynh_app_backup="0"
+    old_ynh_app_backup=false
 fi
 ynh_app_backup="${YNH_CONFIG_MAIN_BACKUP_TYPES_APPS_BACKUP:-$old_ynh_app_backup}"
 
@@ -182,7 +182,7 @@ apply_config() {
     ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$ynh_core_backup" --target_file="$config_file"
 
     # Change ynh_app_backup in the config file
-    if [ "$ynh_app_backup" = "1" ] && [ "$old_ynh_app_backup" = "0" ]
+    if [ "$ynh_app_backup" = true ] && [ "$old_ynh_app_backup" = false ]
     then
         # If ynh_app_backup changed from false to true.
         # Add all current applications to the backup
@@ -191,7 +191,7 @@ apply_config() {
             ynh_print_info --message="Add a backup for the app $backup_app."
             ynh_replace_string --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&" --target_file="$config_file"
         done <<< "$(yunohost app list -i | grep id: | sed 's/.*id: //')"
-    elif [ "$ynh_app_backup" = "0" ] && [ "$old_ynh_app_backup" = "1" ]
+    elif [ "$ynh_app_backup" = false ] && [ "$old_ynh_app_backup" = true ]
     then
         # Remove all app currently backup
         # By deleting all line starting by 'ynh_app_backup=' and having something after '='
