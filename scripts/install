@@ -25,6 +25,9 @@ encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD
 core_backup=$YNH_APP_ARG_CORE_BACKUP
 apps_backup=$YNH_APP_ARG_APPS_BACKUP
 frequency="$YNH_APP_ARG_FREQUENCY"
+max_size="$YNH_APP_ARG_MAX_SIZE"
+compress_ynh="$YNH_APP_COMPRESS_YNH"
+compress_files="$YNH_APP_COMPRESS_FILES"
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -46,7 +49,7 @@ fi
 ynh_script_progression --message="Storing installation settings..." --weight=3
 
 ynh_app_setting_set --app=$app --key=frequency --value="$frequency"
-ynh_app_setting_set --app=$app --key=max_size --value=500  #$max_size
+ynh_app_setting_set --app=$app --key=max_size --value=$max_size
 ynh_app_setting_set --app=$app --key=encrypt --value="$encrypt"
 
 ynh_app_setting_set --app=$app --key=core_backup --value="$core_backup"
