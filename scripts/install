@@ -91,10 +91,6 @@ mkdir -p "$backup_dir"
 ynh_script_progression --message="Configuring Archivist..." --weight=2
 
 config_file="$final_path/Backup_list.conf"
-cp "$final_path/Backup_list.conf.default" "$config_file"
-
-ynh_replace_string --match_string="^backup_dir=.*" --replace_string="backup_dir=$backup_dir" --target_file="$config_file"
-ynh_replace_string --match_string="^enc_backup_dir=.*" --replace_string="enc_backup_dir=$enc_backup_dir" --target_file="$config_file"
 
 if [ $encrypt -eq 1 ]
 then
@@ -107,8 +103,7 @@ else
 	encrypt=false
 	passkey=na
 fi
-ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
-ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
+
 
 if [ $core_backup -eq 1 ]
 then
@@ -116,7 +111,8 @@ then
 else
 	core_backup=false
 fi
-ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$core_backup" --target_file="$config_file"
+
+ynh_add_config --template="Backup_list.conf.default" --destination="$config_file"
 
 if [ $apps_backup -eq 1 ]
 then
