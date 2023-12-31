@@ -148,10 +148,10 @@ ynh_store_file_checksum --file="/etc/cron.d/$app"
 #=================================================
 
 # Set permissions to app files
-# chown -R $app: $final_path
+chown -R $app: $final_path
 ## Debug
 ynh_exec_warn ls -l $final_path
-# ynh_system_user_exists --username=$app
+ynh_system_user_exists --username=$app
 chmod 777 $final_path
 
 #=================================================
