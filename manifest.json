@@ -82,7 +82,7 @@
                 "name": "max_size",
                 "type": "select",
                 "ask": {
-                    "en": "Specify the max size of each files backup (soft limit) in Mb. This will try to split the backup by its subdirectories to avoid to have only one big backup.",
+                    "en": "Specify the max size of each files backup (soft limit) in Mb. This will try to split the backup by its subdirectories to avoid to have only one big backup."
                 },
                 "choices" : ["50", "100", "500", "1000", "5000"],
                 "default" : "500"
