@@ -10,7 +10,6 @@
     "url": "https://github.com/maniackcrudelis/archivist",
     "upstream": {
         "license": "GPL-3.0",
-        "website": "https://github.com/maniackcrudelis/archivist",
         "code": "https://github.com/maniackcrudelis/archivist"
     },
     "license": "GPL-3.0",
@@ -71,7 +70,7 @@
             },
             {
                 "name": "frequency",
-                "type": "string",
+                "type": "select",
                 "ask": {
                     "en": "Choose the frequency of your backups?",
                     "fr": "Choississez la fréquence de votre backup ?"

@@ -181,9 +181,7 @@ ynh_use_logrotate
 # PRINT INFORMATION
 #=================================================
 
-Informations="
-To add recipients or to modify the files or apps to backup,
-please have a look to the config file $config_file"
+Informations="To add recipients or to modify the files or apps to backup,please have a look to the config file $config_file"
 ynh_print_info --message="$Informations"
 
 #=================================================
@@ -192,10 +190,7 @@ ynh_print_info --message="$Informations"
 
 if [ "$encrypt" = "true" ]
 then
-	encrypt_message="Your password for encryption is '$encryption_pwd'
-
-"
-
+	encrypt_message="Your password for encryption is '$encryption_pwd'"
 else
 	encrypt_message=""
 fi
