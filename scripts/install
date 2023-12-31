@@ -47,6 +47,7 @@ ynh_script_progression --message="Storing installation settings..." --weight=3
 
 ynh_app_setting_set --app=$app --key=frequency --value="$frequency"
 ynh_app_setting_set --app=$app --key=encrypt --value="$encrypt"
+ynh_app_setting_set --app=$app --key=encryption_pwd --value="$encryption_pwd"
 ynh_app_setting_set --app=$app --key=core_backup --value="$core_backup"
 ynh_app_setting_set --app=$app --key=apps_backup --value="$apps_backup"
 
