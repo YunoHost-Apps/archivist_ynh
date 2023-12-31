@@ -159,7 +159,7 @@ ynh_store_file_checksum --file="/etc/cron.d/$app"
 
 # Set permissions to app files
 # chown -R $app: $final_path
-ynh_exec_warn ls -l
+ynh_exec_warn ls -l $final_path
 
 #=================================================
 # GENERIC FINALIZATION
