@@ -46,6 +46,7 @@ fi
 ynh_script_progression --message="Storing installation settings..." --weight=3
 
 ynh_app_setting_set --app=$app --key=frequency --value="$frequency"
+ynh_app_setting_set --app=$app --key=max_size --value=$max_size
 ynh_app_setting_set --app=$app --key=encrypt --value="$encrypt"
 
 ynh_app_setting_set --app=$app --key=core_backup --value="$core_backup"
@@ -53,6 +54,9 @@ ynh_app_setting_set --app=$app --key=apps_backup --value="$apps_backup"
 
 ynh_app_setting_set --app=$app --key=overwrite_cron --value=1
 ynh_app_setting_set --app=$app --key=admin_mail_html --value=1
+
+ynh_app_setting_set --app=$app --key=compress_ynh --value=$compress_ynh
+ynh_app_setting_set --app=$app --key=compress_files --value=$compress_files
 
 #=================================================
 # STANDARD MODIFICATIONS
