@@ -48,8 +48,8 @@ cryptpass="__PASSKEY__"
 #   WARNING: Does not work with encryption !
 #
 # Default: gzip
-ynh_compression_mode=gzip
-files_compression_mode=gzip
+ynh_compression_mode=__COMPRESS_YNH__
+files_compression_mode=__COMPRESS_FILES__
 
 # --------------------------------------------------------------------------------------
 ## YUNOHOST BACKUPS
