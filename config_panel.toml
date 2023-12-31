@@ -1,5 +1,4 @@
 version = "1.0"
-name = "Archivist configuration panel"
 
 [main]
 name = "Archivist configuration"
