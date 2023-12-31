@@ -46,7 +46,7 @@ fi
 ynh_script_progression --message="Storing installation settings..." --weight=3
 
 ynh_app_setting_set --app=$app --key=frequency --value="$frequency"
-ynh_app_setting_set --app=$app --key=max_size --value=$max_size
+ynh_app_setting_set --app=$app --key=max_size --value=500  #$max_size
 ynh_app_setting_set --app=$app --key=encrypt --value="$encrypt"
 
 ynh_app_setting_set --app=$app --key=core_backup --value="$core_backup"
