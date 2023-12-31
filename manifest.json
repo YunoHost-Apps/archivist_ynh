@@ -77,7 +77,7 @@
                 },
                 "choices" : ["Daily", "Each 3 days", "Weekly", "Biweekly", "Monthly"],
                 "default" : "Weekly"
-            }
+            },
             {
                 "name": "max_size",
                 "type": "select",
