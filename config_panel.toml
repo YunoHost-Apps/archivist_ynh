@@ -10,13 +10,14 @@ name = "Archivist configuration"
         ask = "Do you want to encrypt your backups ?"
         type = "boolean"
         default = true
+        bind = "encrypt:/opt/yunohost/__APP__/Backup_list.conf"
 
         [main.encryption.encryption_pwd]
         ask = "Set the password for encryption"
         type = "password"
         optional = true
         help = "A password is needed if encryption is activated."
-        bind = "/var/www/__APP__/passkey"
+        bind = "/opt/yunohost/__APP__/passkey"
 
     [main.compression]
     name = "Compression algorithm"
@@ -26,12 +27,14 @@ name = "Archivist configuration"
         type = "select"
         choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
         default = "gzip"
-
+        bind = "ynh_compression_mode:/opt/yunohost/__APP__/Backup_list.conf"
+        
         [main.compression.compress_files]
         ask = "Choose the compression algorithm for files and directories backups"
         type = "select"
         choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
         default = "gzip"
+        bind = "files_compression_mode:/opt/yunohost/__APP__/Backup_list.conf"
 
     [main.backup_types]
     name = "Backup"
@@ -40,6 +43,7 @@ name = "Archivist configuration"
         ask = "Would you like to backup your YunoHost core ?"
         type = "boolean"
         default = true
+        bind = "ynh_core_backup:/opt/yunohost/__APP__/Backup_list.conf"        
 
         [main.backup_types.apps_backup]
         ask = "Would you like to backup your apps ?"
