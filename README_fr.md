@@ -40,7 +40,7 @@ Consultez l'[audit de sécurité](https://defuse.ca/audits/encfs.htm) pour avoir
 ## Documentations et ressources
 
 * Dépôt de code officiel de l’app : <https://github.com/maniackcrudelis/archivist>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_archivist>
+* YunoHost Store: <https://apps.yunohost.org/app/archivist>
 * Signaler un bug : <https://github.com/YunoHost-Apps/archivist_ynh/issues>
 
 ## Informations pour les développeurs

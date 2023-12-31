@@ -70,7 +70,7 @@
             },
             {
                 "name": "frequency",
-                "type": "string",
+                "type": "select",
                 "ask": {
                     "en": "Choose the frequency of your backups?",
                     "fr": "Choississez la fréquence de votre backup ?"
