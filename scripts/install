@@ -39,7 +39,7 @@ ynh_script_progression --message="Validating installation parameters..."
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
-if [ $encrypt ]; then
+if [ "$encrypt"  = true]; then
 	test -n "$encryption_pwd" || ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
 fi
 
@@ -100,7 +100,7 @@ ynh_script_progression --message="Configuring Archivist..." --weight=2
 
 config_file="$final_path/Backup_list.conf"
 
-if [ $encrypt ]
+if [ "$encrypt" = true ]
 then
 	passkey="$final_path/passkey"
 	echo "$encryption_pwd" > "$passkey"
@@ -112,7 +112,7 @@ fi
 
 ynh_add_config --template="Backup_list.conf.default" --destination="$config_file"
 
-if [ $apps_backup ]
+if [ "$apps_backup" = true ]
 then
 	# Add all current applications to the backup
 	while read backup_app
