@@ -135,9 +135,6 @@ ynh_store_file_checksum --file="$config_file"
 #=================================================
 ynh_script_progression --message="Configuring the cron file..."
 
-cp ../conf/cron /etc/cron.d/$app
-ynh_replace_string --match_string="__FINALPATH__" --replace_string="$final_path" --target_file=/etc/cron.d/$app
-ynh_replace_string --match_string="__APP__" --replace_string=$app --target_file=/etc/cron.d/$app
 if [ "$frequency" = "Daily" ]; then
 	cron_freq="0 2 * * *"
 	run_freq="every day"
@@ -154,7 +151,8 @@ else	# Monthly
 	cron_freq="0 2 1 * *"
 	run_freq="once a month on the first sunday"
 fi
-ynh_replace_string --match_string="__FREQUENCY__" --replace_string="$cron_freq" --target_file=/etc/cron.d/$app
+
+ynh_add_config --template="cron" --destination="/etc/cron.d/$app"
 
 # Calculate and store the config file checksum into the app settings
 ynh_store_file_checksum --file="/etc/cron.d/$app"
