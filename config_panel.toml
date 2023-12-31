@@ -21,7 +21,7 @@ name = "Archivist configuration"
     [main.compression]
     name = "Compression algorithm"
 
-        [main.compression.compress_core]
+        [main.compression.compress_ynh]
         ask = "Choose the compression algorithm for YunoHost backups"
         type = "select"
         choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
