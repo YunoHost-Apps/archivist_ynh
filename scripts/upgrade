@@ -149,7 +149,7 @@ fi
 #=================================================
 
 # Set permissions on app files
-chown -R root: $final_path
+chown -R $app: $final_path
 
 #=================================================
 # GENERIC FINALIZATION
