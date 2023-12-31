@@ -5,7 +5,7 @@
 		core_backup=true
 		apps_backup=true
 		frequency="Weekly"
-		max_size=500
+		max_size="500"
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
