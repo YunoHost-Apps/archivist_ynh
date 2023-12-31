@@ -26,8 +26,8 @@ core_backup=$YNH_APP_ARG_CORE_BACKUP
 apps_backup=$YNH_APP_ARG_APPS_BACKUP
 frequency="$YNH_APP_ARG_FREQUENCY"
 max_size="$YNH_APP_ARG_MAX_SIZE"
-compress_ynh="$YNH_APP_ARG_COMPRESS_YNH"
-compress_files="$YNH_APP_ARG_COMPRESS_FILES"
+compress_ynh="gzip" # by default
+compress_files="gzip" # by default 
 
 app=$YNH_APP_INSTANCE_NAME
 
