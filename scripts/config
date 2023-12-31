@@ -124,7 +124,7 @@ apply_config() {
     #=================================================
 
     # Change the password if needed
-    if [ "$encrypt" = "1" ]
+    if [ "$encrypt" ]
     then
         ynh_print_OFF
         test -n "$encrypt_password" || ynh_die --message="The password for encryption can't be empty if you choose to enable encryption."
