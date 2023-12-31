@@ -39,7 +39,7 @@ ynh_script_progression --message="Validating installation parameters..."
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
-if [ "$encrypt"  = true]; then
+if [ "$encrypt" = true ]; then
 	test -n "$encryption_pwd" || ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
 fi
 
