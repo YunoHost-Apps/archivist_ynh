@@ -23,11 +23,13 @@ name = "Archivist configuration"
 
         [main.compression.ynh]
         ask = "Choose the compression algorithm for YunoHost backups"
+        type = "select"
         choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
         default = "gzip"
 
         [main.compression.files]
         ask = "Choose the compression algorithm for files and directories backups"
+        type = "select"
         choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
         default = "gzip"
 
@@ -50,6 +52,7 @@ name = "Archivist configuration"
 
         [main.backup_options.frequency]
         ask = "Choose the frequency of your backups ?"
+        type = "select"
         choices = ["Daily", "Each 3 days", "Weekly", "Biweekly", "Monthly"]
         default = "Weekly"
 
