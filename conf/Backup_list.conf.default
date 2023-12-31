@@ -1,0 +1,139 @@
+## OPTIONS
+
+# Backup directory.
+backup_dir="__BACKUP_DIR__"
+
+# Encrypted backup directory.
+# Usually just next to the backup directory
+enc_backup_dir="__ENC_BACKUP_DIR__"
+
+# Encryption
+# true/false
+encrypt=__ENCRYPT__
+# Password for encryption
+# This file should be set at chmod 400
+cryptpass="__PASSKEY__"
+
+# Compression algorithm to use
+# gzip
+#   Standard compression algorithm.
+#   Fast and light on ressources.
+# lzop
+#   Very fast algorithm.
+#   Low efficency
+# zstd
+#   Zstandard algorithm
+#   Similar to gzip but faster
+# bzip2
+#   Very slow but very effective.
+#   Light on ressources.
+# lzma
+#   Faster than bzip2 and even more effective.
+#   But demanding in resources.
+# lzip
+#   Similar to lzma.
+# xz
+#   Similar to lzma but more recent.
+#
+# none
+#   No compression
+#   Concatenation in a tar file only
+# symlink
+#   No compression
+#   Symbolic link to the YunoHost tar file from /home/yunohost.backup/archives
+#   The symbolic link is used only for the local $backup_dir of archivist.
+#   Real tar files are send to recipients.
+#
+#   This mode allow archivist to not duplicate locally the backup if not compressed.
+#   WARNING: Does not work with encryption !
+#
+# Default: gzip
+ynh_compression_mode=gzip
+files_compression_mode=gzip
+
+# --------------------------------------------------------------------------------------
+## YUNOHOST BACKUPS
+
+# YunoHost backups
+# Specific backup made by 'yunohost backup' command
+# ynh_core_backup=__CORE_BACKUP__: Make a backup of the core of YunoHost, without any apps.
+ynh_core_backup=true
+ynh_core_pre_backup=
+ynh_core_post_backup=
+
+# ynh_app_backup=APP: Make a backup of an app.
+# You can add as many lines as you want to save multiple apps.
+# List all apps with sudo yunohost app list --installed | grep "id: "
+# ynh_app_backup=wordpress
+# If you don't want an app with a lot of data to backup those big files, please add 'do_not_backup_data' after the app name.
+# ynh_app_backup=transmission do_not_backup_data
+ynh_app_pre_backup=
+ynh_app_post_backup=
+ynh_app_backup=
+
+# --------------------------------------------------------------------------------------
+## FILES BACKUPS
+
+# Max size for each backup in Mb.
+# Be carreful, it's only a soft limit, that means the script will try to limit each backup.
+# Because, it will never made more than one backup for a single directory (Even if it's a real big directory without subdirectories). And the same if there's files next to subdirectories, only one backup will be made for all this files.
+max_size=500
+
+# Backup of files and directories
+# Add as many lines as you want for each directory or file you want to be backuped.
+# Exclude a directory, a file, or multiples files with a regex with the exclude_backup instruction.
+# file_to_backup="/directory/to backup"
+# file_to_backup=/file/to backup
+# exclude_backup="/directory/to exclude"
+# exclude_backup=/file/to exclude
+# exclude_backup="/exclude/all/tarball/in_this_directory/.tar.gz$"
+files_pre_backup=
+files_post_backup=
+file_to_backup=
+exclude_backup=
+
+# --------------------------------------------------------------------------------------
+## BACKUPS RECIPIENTS
+
+# All options following a recipient name will be enabled for this recipient only.
+# > recipient name=Name of this recipient.
+# type=Choose between one of the scripts in the "senders" directory.
+# destination directory=Directory where to put the backup in the other side.
+# encrypt=Override main option for encryption. (true/false) (Optionnal option)
+# specific option for type=See the chosen script to know what's the options.
+# exclude backup=Exclude a backup file or a directory from the backup. This option can be duplicated. (Optionnal option)
+# include backup=Choose the only file or directory which be send. This option can be duplicated. (Optionnal option)
+
+# > recipient name=local example
+# type=local
+# destination directory=/my/local/backup
+# encrypt=false
+# pre_backup=
+# post_backup=
+# exclude backup=/exclude/dir
+# include backup=
+
+# > recipient name=rsync ssh example
+# type=rsync_ssh
+# destination directory=backup
+# encrypt=false
+# ssh_host=domain.tld
+# ssh_user=user
+# ssh_port=22
+# ssh_key=/home/user/.ssh/id_rsa
+# ssh_pwd=
+# ssh_options=
+# pre_backup=
+# post_backup=
+# exclude backup=/exclude/dir
+# include backup=
+
+# > recipient name=b2 example
+# type=b2
+# destination directory=backup
+# encrypt=false
+# b2_bucket=my-bucket
+# pre_backup=
+# post_backup=
+# exclude backup=/exclude/dir
+# include backup=
