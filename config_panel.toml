@@ -16,6 +16,7 @@ name = "Archivist configuration"
         type = "password"
         optional = true
         help = "A password is needed if encryption is activated."
+        bind = "/var/www/__APP__/passkey"
 
     [main.compression]
     name = "Compression algorithm"
