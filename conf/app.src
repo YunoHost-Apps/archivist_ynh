@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/maniackcrudelis/archivist/archive/refs/tags/v1.3.3.tar.gz
-SOURCE_SUM=30fc33e5091f7e388004324da5f43b067ccb69e522a12ca298a2d969688094ee
+SOURCE_URL=https://github.com/maniackcrudelis/archivist/archive/refs/tags/v1.3.4.tar.gz
+SOURCE_SUM=97df967d79ee2acd0bfae929a9feccea4df0f5943f14101a20a066470142fe89
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=tar.gz
 SOURCE_IN_SUBDIR=true

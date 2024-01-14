@@ -1,9 +1,9 @@
 ;; Test complet
 	; Manifest
-		encrypt=1
+		encrypt=true
 		encryption_pwd="password"
-		core_backup=1
-		apps_backup=1
+		core_backup=true
+		apps_backup=true
 		frequency="Weekly"
 	; Checks
 		pkg_linter=1
