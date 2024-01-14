@@ -79,6 +79,8 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=3
 
+ynh_system_user_create --username=$app --groups="admin"
+
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
@@ -156,11 +158,11 @@ ynh_store_file_checksum --file="/etc/cron.d/$app"
 #=================================================
 
 # Set permissions to app files
-#chown -R $app: $final_path
+chown -R $app: $final_path
 ## Debug
 ynh_exec_warn ls -l $final_path
-#ynh_system_user_exists --username=$app
-chmod -R 777 $final_path
+ynh_system_user_exists --username=$app
+#chmod -R 777 $final_path
 ynh_exec_warn ls -l $final_path
 
 #=================================================
