@@ -1,0 +1,1 @@
+__APP__ ALL=(root) NOPASSWD: /usr/bin/yunohost backup create *, /usr/bin/yunohost backup restore *, /usr/bin/yunohost backup delete *, /usr/bin/yunohost app list *, /usr/bin/yunohost app remove *, /bin/ls

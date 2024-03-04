@@ -5,6 +5,7 @@
 		core_backup=true
 		apps_backup=true
 		frequency="Weekly"
+		max_size="500"
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
@@ -25,4 +26,4 @@ Notification=change
 ;;; Upgrade options
 	; #commit=2b2793737d5e1374659cbb74838d10162a2147e6
 		#name=03 Nov 2017 2b2793737d5e1374659cbb74838d10162a2147e6
-		manifest_arg=encrypt=1&encryption_pwd="password"&core_backup=1&apps_backup=1&frequency="Weekly"&
+		manifest_arg=encrypt=true&encryption_pwd="password"&core_backup=true&apps_backup=true&frequency="Weekly"&max_size=500&

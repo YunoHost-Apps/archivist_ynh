@@ -25,6 +25,9 @@ encryption_pwd=$YNH_APP_ARG_ENCRYPTION_PWD
 core_backup=$YNH_APP_ARG_CORE_BACKUP
 apps_backup=$YNH_APP_ARG_APPS_BACKUP
 frequency="$YNH_APP_ARG_FREQUENCY"
+max_size="$YNH_APP_ARG_MAX_SIZE"
+compress_ynh="gzip" # by default
+compress_files="gzip" # by default 
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -36,7 +39,7 @@ ynh_script_progression --message="Validating installation parameters..."
 final_path=/opt/yunohost/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
-if [ $encrypt -eq 1 ]; then
+if [ "$encrypt" = true ]; then
 	test -n "$encryption_pwd" || ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
 fi
 
@@ -46,12 +49,17 @@ fi
 ynh_script_progression --message="Storing installation settings..." --weight=3
 
 ynh_app_setting_set --app=$app --key=frequency --value="$frequency"
+ynh_app_setting_set --app=$app --key=max_size --value=$max_size
 ynh_app_setting_set --app=$app --key=encrypt --value="$encrypt"
+
 ynh_app_setting_set --app=$app --key=core_backup --value="$core_backup"
 ynh_app_setting_set --app=$app --key=apps_backup --value="$apps_backup"
 
 ynh_app_setting_set --app=$app --key=overwrite_cron --value=1
 ynh_app_setting_set --app=$app --key=admin_mail_html --value=1
+
+ynh_app_setting_set --app=$app --key=compress_ynh --value=$compress_ynh
+ynh_app_setting_set --app=$app --key=compress_files --value=$compress_files
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -70,6 +78,8 @@ ynh_install_app_dependencies $pkg_dependencies
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=3
+
+ynh_system_user_create --username=$app --groups="admins"
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
@@ -91,15 +101,9 @@ mkdir -p "$backup_dir"
 ynh_script_progression --message="Configuring Archivist..." --weight=2
 
 config_file="$final_path/Backup_list.conf"
-cp "$final_path/Backup_list.conf.default" "$config_file"
 
-ynh_replace_string --match_string="^backup_dir=.*" --replace_string="backup_dir=$backup_dir" --target_file="$config_file"
-ynh_replace_string --match_string="^enc_backup_dir=.*" --replace_string="enc_backup_dir=$enc_backup_dir" --target_file="$config_file"
-
-if [ $encrypt -eq 1 ]
+if [ "$encrypt" = true ]
 then
-	encrypt=true
-
 	passkey="$final_path/passkey"
 	echo "$encryption_pwd" > "$passkey"
 	chmod 400 "$passkey"
@@ -107,18 +111,10 @@ else
 	encrypt=false
 	passkey=na
 fi
-ynh_replace_string --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt" --target_file="$config_file"
-ynh_replace_string --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey" --target_file="$config_file"
 
-if [ $core_backup -eq 1 ]
-then
-	core_backup=true
-else
-	core_backup=false
-fi
-ynh_replace_string --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$core_backup" --target_file="$config_file"
+ynh_add_config --template="Backup_list.conf.default" --destination="$config_file"
 
-if [ $apps_backup -eq 1 ]
+if [ "$apps_backup" = true ]
 then
 	# Add all current applications to the backup
 	while read backup_app
@@ -135,9 +131,6 @@ ynh_store_file_checksum --file="$config_file"
 #=================================================
 ynh_script_progression --message="Configuring the cron file..."
 
-cp ../conf/cron /etc/cron.d/$app
-ynh_replace_string --match_string="__FINALPATH__" --replace_string="$final_path" --target_file=/etc/cron.d/$app
-ynh_replace_string --match_string="__APP__" --replace_string=$app --target_file=/etc/cron.d/$app
 if [ "$frequency" = "Daily" ]; then
 	cron_freq="0 2 * * *"
 	run_freq="every day"
@@ -154,7 +147,8 @@ else	# Monthly
 	cron_freq="0 2 1 * *"
 	run_freq="once a month on the first sunday"
 fi
-ynh_replace_string --match_string="__FREQUENCY__" --replace_string="$cron_freq" --target_file=/etc/cron.d/$app
+
+ynh_add_config --template="cron" --destination="/etc/cron.d/$app"
 
 # Calculate and store the config file checksum into the app settings
 ynh_store_file_checksum --file="/etc/cron.d/$app"
@@ -164,7 +158,7 @@ ynh_store_file_checksum --file="/etc/cron.d/$app"
 #=================================================
 
 # Set permissions to app files
-chown -R root: $final_path
+chown -R $app: $final_path
 
 #=================================================
 # GENERIC FINALIZATION

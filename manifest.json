@@ -6,7 +6,7 @@
         "en": "Automatic backups",
         "fr": "Sauvegardes automatiques"
     },
-    "version": "1.3.4~ynh1",
+    "version": "1.3.4~ynh2",
     "url": "https://github.com/maniackcrudelis/archivist",
     "upstream": {
         "license": "GPL-3.0",
@@ -77,6 +77,15 @@
                 },
                 "choices" : ["Daily", "Each 3 days", "Weekly", "Biweekly", "Monthly"],
                 "default" : "Weekly"
+            },
+            {
+                "name": "max_size",
+                "type": "select",
+                "ask": {
+                    "en": "Specify the max size of each files backup (soft limit) in Mb. This will try to split the backup by its subdirectories to avoid to have only one big backup."
+                },
+                "choices" : ["50", "100", "500", "1000", "5000"],
+                "default" : "500"
             }
         ]
     }

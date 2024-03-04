@@ -1,0 +1,85 @@
+version = "1.0"
+
+[main]
+name = "Archivist configuration"
+
+    [main.encryption]
+    name = "Encryption"
+
+        [main.encryption.encrypt]
+        ask = "Do you want to encrypt your backups ?"
+        type = "boolean"
+        default = true
+        bind = "encrypt:__FINAL_PATH__/Backup_list.conf"
+
+        [main.encryption.encryption_pwd]
+        ask = "Set the password for encryption"
+        type = "password"
+        optional = true
+        help = "A password is needed if encryption is activated."
+        bind = "__FINAL_PATH__/passkey"
+
+    [main.compression]
+    name = "Compression algorithm"
+
+        [main.compression.compress_ynh]
+        ask = "Choose the compression algorithm for YunoHost backups"
+        type = "select"
+        choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
+        default = "gzip"
+        bind = "ynh_compression_mode:__FINAL_PATH__/Backup_list.conf"
+        
+        [main.compression.compress_files]
+        ask = "Choose the compression algorithm for files and directories backups"
+        type = "select"
+        choices = ["gzip", "lzop", "zstd", "bzip2", "lzma", "lzip", "xz", "No compression"]
+        default = "gzip"
+        bind = "files_compression_mode:__FINAL_PATH__/Backup_list.conf"
+
+    [main.backup_types]
+    name = "Backup"
+
+        [main.backup_types.core_backup]
+        ask = "Would you like to backup your YunoHost core ?"
+        type = "boolean"
+        default = true
+        bind = "ynh_core_backup:__FINAL_PATH__/Backup_list.conf"        
+
+        [main.backup_types.apps_backup]
+        ask = "Would you like to backup your apps ?"
+        type = "boolean"
+        default = true
+        help = "WARNING: Changing this value will either remove backup for all apps or add all current apps to the backup."
+
+    [main.backup_options]
+    name = "Backup options"
+
+        [main.backup_options.frequency]
+        ask = "Choose the frequency of your backups ?"
+        type = "select"
+        choices = ["Daily", "Each 3 days", "Weekly", "Biweekly", "Monthly"]
+        default = "Weekly"
+
+        [main.backup_options.max_size]
+        ask = "Max size for each backup in Mb"
+        type = "number"
+        default = 500
+        help = "Specify the max size of each backup for the following option file_to_backup.</br>This option is a soft limit, that means the script will try to limit each backup to this max size if it can.</br>But there's 2 limitations, for a single directory, it can't makes more than one backup file, even if the files in this directory exceed this maximum size.</br>And, if there's some files in a directory, next to subdirectories, it'll make only one backup for this files.</br>So this limit will be applied to split the backup by its subdirectories to avoid to have only one big backup."
+
+    [main.overwrite_files]
+    name = "Overwriting config files"
+
+        [main.overwrite_files.overwrite_cron]
+        ask = "Overwrite the cron file during the upgrade ?"
+        type = "boolean"
+        default = true
+        help = "If the file is overwritten, a backup will be created."
+
+    [main.global_config]
+    name = "Global configuration"
+
+        [main.global_config.email_type]
+        ask = "Send HTML email to admin ?"
+        type = "boolean"
+        default = true
+        help = "Allow app scripts to send HTML mails instead of plain text."
