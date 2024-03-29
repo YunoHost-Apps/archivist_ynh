@@ -1,1 +1,0 @@
-__FREQUENCY__ root nice -n10 __FINALPATH__/archivist.sh | tee -a /var/log/__APP__/__APP__.log 2>&1

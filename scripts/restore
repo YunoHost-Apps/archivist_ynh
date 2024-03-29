@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -11,86 +9,37 @@ source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..."
-
-app=$YNH_APP_INSTANCE_NAME
-
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-
-#=================================================
-# CHECK IF THE APP CAN BE RESTORED
-#=================================================
-ynh_script_progression --message="Validating restoration parameters..."
-
-test ! -d $final_path \
-	|| ynh_die --message="There is already a directory: $final_path "
-
-#=================================================
-# STANDARD RESTORATION STEPS
-#=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression --message="Restoring the app main directory..."
+ynh_script_progression --message="Restoring the app main directory..." --weight=1
 
-ynh_restore_file --origin_path="$final_path"
+ynh_restore_file --origin_path="$install_dir"
+
+chown -R "root:root" "$install_dir"
 
 #=================================================
-# SPECIFIC RESTORATION
+# RESTORE THE DATA DIRECTORY
 #=================================================
-# REINSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --weight=17
+ynh_script_progression --message="Restoring the data directory..." --weight=1
 
-# Valid the fucking debconf message
-# To find this, install the package, install also debconf-utils
-# Then use `debconf-get-selections | grep package`
-echo "encfs encfs/security-information boolean true" | debconf-set-selections
-ynh_install_app_dependencies $pkg_dependencies
+ynh_restore_file --origin_path="$data_dir" --not_mandatory
+
+chown -R "root:root" "$data_dir"
+
+#=================================================
+# RESTORE SYSTEM CONFIGURATIONS
+#=================================================
+ynh_script_progression --message="Restoring system configurations related to $app..." --weight=1
+
+ynh_restore_file --origin_path="/etc/logrotate.d/$app"
+
+ynh_restore_file --origin_path="/etc/cron.d/$app"
 
 #=================================================
 # RESTORE VARIOUS FILES
 #=================================================
-ynh_script_progression --message="Restoring various files..."
 
-ynh_restore_file --origin_path="/etc/cron.d/$app"
-
-mkdir -p "/home/yunohost.app/${app}/backup"
-
-#=================================================
-# RESTORE THE LOGROTATE CONFIGURATION
-#=================================================
-ynh_script_progression --message="Restoring the logrotate configuration..."
-
-mkdir -p /var/log/$app
-ynh_restore_file --origin_path="/etc/logrotate.d/$app"
-
-#=================================================
-# SEND A README FOR THE ADMIN
-#=================================================
-
-# Get main domain and buid the url of the admin panel of the app.
-admin_panel="https://$(grep portal_domain /etc/ssowat/conf.json | cut -d'"' -f4)/yunohost/admin/#/apps/$app"
-
-echo "If you want to change the frequency of Archivist, have a look to the file /etc/cron.d/$app.
-
-The configuration file of Archivist has been restored at $final_path/Backup_list.conf
-Please read the __URL_TAG1__documentation__URL_TAG2__https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md__URL_TAG3__ about the configuration of archivist for more information.
-
-You can configure this app easily by using the experimental __URL_TAG1__config-panel feature__URL_TAG2__$admin_panel/config-panel__URL_TAG3__.
-You can also find some specific actions for this app by using the experimental __URL_TAG1__action feature__URL_TAG2__$admin_panel/actions__URL_TAG3__.
-
-If you're facing an issue or want to improve this app, please open a new issue in this __URL_TAG1__project__URL_TAG2__https://github.com/YunoHost-Apps/archivist_ynh__URL_TAG3__." > mail_to_send
-
-ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root" --type=restore
+ynh_restore_file --origin_path="/var/log/$app/"
 
 #=================================================
 # END OF SCRIPT

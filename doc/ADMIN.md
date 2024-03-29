@@ -7,4 +7,3 @@ Please read the [documentation](https://github.com/maniackcrudelis/archivist/blo
 
 * Encfs, which be used to encrypt the data, is not fully secured.  
 Have a look to the [security audit](https://defuse.ca/audits/encfs.htm) to have more informations.
-

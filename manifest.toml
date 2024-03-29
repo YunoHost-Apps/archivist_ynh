@@ -1,0 +1,91 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
+packaging_format = 2
+
+id = "archivist"
+name = "Archivist"
+description.en = "Automatic backups"
+description.fr = "Sauvegardes automatiques"
+
+version = "1.3.4~ynh2"
+
+maintainers = []
+
+[upstream]
+license = "GPL-3.0"
+code = "https://github.com/maniackcrudelis/archivist"
+
+[integration]
+yunohost = ">= 11.2.9"
+architectures = "all"
+multi_instance = true
+ldap = "not_relevant"
+sso = "not_relevant"
+disk = "50M"
+ram.build = "100M"
+ram.runtime = "100M"
+
+[install]
+    [install.encrypt]
+    ask.en = "Do you want to encrypt your backups?"
+    ask.fr = "Voulez-vous chiffrer vos sauvegardes ?"
+    type = "boolean"
+    default = true
+
+    [install.encryption_pwd]
+    ask.en = "Set the password for encryption."
+    ask.fr = "Définissez le mot de passe de chiffrement."
+    help.en = "It's needed if you use backup encryption."
+    help.fr = "C'est nécessaire si vous utilisez le chiffrement."
+    type = "password"
+    optional = true
+
+    [install.core_backup]
+    ask.en = "Would you like to backup your YunoHost core?"
+    ask.fr = "Souhaitez-vous effectuer des sauvegardes du système YunoHost ?"
+    type = "boolean"
+    default = true
+
+    [install.apps_backup]
+    ask.en = "Would you like to backup your apps?"
+    ask.fr = "Souhaitez-vous effectuer des sauvegardes de vos applications ?"
+    type = "boolean"
+    default = true
+
+    [install.frequency]
+    ask.en = "Choose the frequency of your backups?"
+    ask.fr = "Choississez la fréquence de votre backup ?"
+    type = "select"
+    choices.daily = "Daily"
+    choices.days_3 = "Each 3 days"
+    choices.weekly = "Weekly"
+    choices.weeks_2 = "Biweekly"
+    choices.monthly = "Monthly"
+    default = "weekly"
+
+[resources]
+    [resources.sources.main]
+    url = "https://github.com/maniackcrudelis/archivist/archive/refs/tags/v1.3.4.tar.gz"
+    sha256 = "97df967d79ee2acd0bfae929a9feccea4df0f5943f14101a20a066470142fe89"
+
+    autoupdate.strategy = "latest_github_tag"
+
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.data_dir]
+    subdirs = ["backup", "encrypted_backup"]
+
+    [resources.permissions]
+
+    [resources.apt]
+    packages = [
+        "rsync",
+        "encfs",
+        "sshpass",
+        "ccrypt",
+        "lzop",
+        "zstd",
+        "lzip",
+    ]
