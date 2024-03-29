@@ -8,3 +8,5 @@ test_format = 1.0
     args.frequency = "weekly"
 
     test_upgrade_from.2b2793737d5e1374659cbb74838d10162a2147e6.name = "03/11/2017"
+    test_upgrade_from.2b2793737d5e1374659cbb74838d10162a2147e6.args.frequency = "Weekly"
+    test_upgrade_from.2b2793737d5e1374659cbb74838d10162a2147e6.args.encryption_pwd = "the_password"
