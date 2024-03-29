@@ -12,6 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..."
 
+_fix_frequencies
 _set_frequencies
 
 # If encrypt doesn't exist, create it

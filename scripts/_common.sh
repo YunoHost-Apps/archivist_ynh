@@ -38,6 +38,16 @@ _set_frequencies() {
     ynh_app_setting_set --app="$app" --key=frequency_human --value="$frequency_human"
 }
 
+_fix_frequencies() {
+    case "$frequency" in
+        Daily)          frequency="daily" ; ynh_app_setting_set --app="$app" --key="frequency" --value="$frequency" ;;
+        "Each 3 days")  frequency="days_3" ; ynh_app_setting_set --app="$app" --key="frequency" --value="$frequency" ;;
+        "Weekly")       frequency="weekly" ; ynh_app_setting_set --app="$app" --key="frequency" --value="$frequency" ;;
+        "Biweekly")     frequency="weeks_2" ; ynh_app_setting_set --app="$app" --key="frequency" --value="$frequency" ;;
+        "Monthly")      frequency="monthly" ; ynh_app_setting_set --app="$app" --key="frequency" --value="$frequency" ;;
+    esac
+}
+
 #=================================================
 # EXPERIMENTAL HELPERS
 #=================================================
