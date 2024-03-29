@@ -26,7 +26,6 @@ Archivist est automatiquement lancé périodiquement pour mettre à jour vos sau
 **Version incluse :** 1.3.4~ynh2
 ## Documentations et ressources
 
-- Site officiel de l’app : <https://github.com/maniackcrudelis/archivist>
 - Dépôt de code officiel de l’app : <https://github.com/maniackcrudelis/archivist>
 - YunoHost Store : <https://apps.yunohost.org/app/archivist>
 - Signaler un bug : <https://github.com/YunoHost-Apps/archivist_ynh/issues>

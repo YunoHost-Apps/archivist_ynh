@@ -27,7 +27,6 @@ Archivist is automatically launched periodicaly to update your backups and send 
 **Versión proporcionada:** 1.3.4~ynh2
 ## Documentación e recursos
 
-- Web oficial da app: <https://github.com/maniackcrudelis/archivist>
 - Repositorio de orixe do código: <https://github.com/maniackcrudelis/archivist>
 - Tenda YunoHost: <https://apps.yunohost.org/app/archivist>
 - Informar dun problema: <https://github.com/YunoHost-Apps/archivist_ynh/issues>
