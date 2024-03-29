@@ -21,9 +21,6 @@ _set_frequencies
 
 ynh_app_setting_set --app="$app" --key=overwrite_cron --value=1
 
-# echo "encfs encfs/security-information boolean true" | debconf-set-selections
-#REMOVEME? ynh_install_app_dependencies $pkg_dependencies
-
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
