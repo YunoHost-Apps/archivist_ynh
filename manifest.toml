@@ -62,7 +62,7 @@ ram.runtime = "50M" # FIXME: replace with an **estimate** minimum ram requiremen
     choices.weekly = "Weekly"
     choices.weeks_2 = "Biweekly"
     choices.monthly = "Monthly"
-    default = "Weekly"
+    default = "weekly"
 
 [resources]
     [resources.sources.main]
