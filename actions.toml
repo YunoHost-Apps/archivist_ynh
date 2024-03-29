@@ -1,6 +1,6 @@
 [force_backup]
 name = "Create a new backup"
-command = "/bin/bash scripts/actions/force_backup"
+command = "scripts/actions/force_backup"
 # user = "root"  # optional
 # cwd = "/" # optional
 # accepted_return_codes = [0, 1, 2, 3]  # optional
@@ -9,7 +9,7 @@ description = "Run Archivist to create a new backup."
 
 [clean_backups]
 name = "Clean all previous backup files"
-command = "/bin/bash scripts/actions/clean_backups"
+command = "scripts/actions/clean_backups"
 # user = "root"  # optional
 # cwd = "/" # optional
 # accepted_return_codes = [0, 1, 2, 3]  # optional
@@ -18,7 +18,7 @@ description = "Remove all previous backup files made by Archivist."
 
 [reset_default_config]
 name = "Reset the config file and restore a default one."
-command = "/bin/bash scripts/actions/reset_default_config \"Backup_list.conf\""
+command = "scripts/actions/reset_default_config \"Backup_list.conf\""
 # user = "root"  # optional
 # cwd = "/" # optional
 # accepted_return_codes = [0, 1, 2, 3]  # optional
@@ -27,7 +27,7 @@ description = "Reset the config file Backup_list.conf."
 
 [reset_default_app]
 name = "Reset the app with a default configuration."
-command = "/bin/bash scripts/actions/reset_default_app"
+command = "scripts/actions/reset_default_app"
 # user = "root"  # optional
 # cwd = "/" # optional
 # accepted_return_codes = [0, 1, 2, 3]  # optional

@@ -14,7 +14,6 @@ maintainers = []
 [upstream]
 license = "GPL-3.0"
 code = "https://github.com/maniackcrudelis/archivist"
-website = "https://github.com/maniackcrudelis/archivist"
 
 [integration]
 yunohost = ">= 11.2.9"
