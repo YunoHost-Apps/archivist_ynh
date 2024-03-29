@@ -1,0 +1,1 @@
+__CRON_FREQUENCY__ root nice -n10 __INSTALL_DIR__/archivist.sh | tee -a /var/log/__APP__/__APP__.log 2>&1
