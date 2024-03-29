@@ -14,6 +14,8 @@ source /usr/share/yunohost/helpers
 if [ "$encrypt" -eq 1 ] && [ -z "$encryption_pwd" ]; then
     ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
 fi
+# Not saved as settings by default
+ynh_app_setting_set --app="$app" --key="encryption_pwd" --value="$encryption_pwd"
 
 _set_frequencies
 
