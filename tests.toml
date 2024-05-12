@@ -1,0 +1,12 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/tests.v1.schema.json
+
+test_format = 1.0
+
+[default]
+
+    args.encryption_pwd = "the_password"
+    args.frequency = "weekly"
+
+    test_upgrade_from.ce0ea695d4a4cff09b77bd2cb3438904012f7280.name = "Packaging v1"
+    test_upgrade_from.ce0ea695d4a4cff09b77bd2cb3438904012f7280.args.frequency = "Weekly"
+    test_upgrade_from.ce0ea695d4a4cff09b77bd2cb3438904012f7280.args.encryption_pwd = "the_password"

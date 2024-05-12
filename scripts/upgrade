@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -10,183 +8,75 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=3
-
-app=$YNH_APP_INSTANCE_NAME
-
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-frequency="$(ynh_app_setting_get --app=$app --key=frequency)"
-encrypt=$(ynh_app_setting_get --app=$app --key=encrypt)
-core_backup=$(ynh_app_setting_get --app=$app --key=core_backup)
-apps_backup=$(ynh_app_setting_get --app=$app --key=apps_backup)
-overwrite_cron=$(ynh_app_setting_get --app=$app --key=overwrite_cron)
-
-#=================================================
-# CHECK VERSION
-#=================================================
-ynh_script_progression --message="Checking version..."
-
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=2
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	# Restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..."
 
+_fix_frequencies
+_set_frequencies
+
 # If encrypt doesn't exist, create it
-if [ -z "$encrypt" ]; then
-	encrypt="$(grep "^encrypt=" "$final_path/Backup_list.conf" | cut -d= -f2)"
-	if [ "$encrypt" = true ]; then
-		encrypt=1
-	else
-		encrypt=0
-	fi
-	ynh_app_setting_set --app=$app --key=encrypt --value=$encrypt
+if [ -z "${encrypt:-}" ]; then
+    encrypt="$(grep "^encrypt=" "$install_dir/Backup_list.conf" | cut -d= -f2)"
+    if [ "$encrypt" = true ]; then
+        encrypt=1
+    else
+        encrypt=0
+    fi
+    ynh_app_setting_set --app="$app" --key="encrypt" --value="$encrypt"
 fi
 
 # If core_backup doesn't exist, create it
-if [ -z "$core_backup" ]; then
-	core_backup="$(grep "^ynh_core_backup=" "$final_path/Backup_list.conf" | cut -d= -f2)"
-	ynh_app_setting_set --app=$app --key=core_backup --value=$core_backup
+if [ -z "${core_backup:-}" ]; then
+    core_backup="$(grep "^ynh_core_backup=" "$install_dir/Backup_list.conf" | cut -d= -f2)"
+    ynh_app_setting_set --app="$app" --key="core_backup" --value="$core_backup"
 fi
 
 # If apps_backup doesn't exist, create it
-if [ -z "$apps_backup" ]; then
-	apps_backup="$(grep --count --max-count=1 "^ynh_app_backup=" "$final_path/Backup_list.conf")"
-	ynh_app_setting_set --app=$app --key=apps_backup --value=$apps_backup
+if [ -z "${apps_backup:-}" ]; then
+    apps_backup="$(grep --count --max-count=1 "^ynh_app_backup=" "$install_dir/Backup_list.conf")"
+    ynh_app_setting_set --app="$app" --key="apps_backup" --value="$apps_backup"
 fi
 
 # If overwrite_cron doesn't exist, create it
-if [ -z "$overwrite_cron" ]; then
-	overwrite_cron=1
-	ynh_app_setting_set --app=$app --key=overwrite_cron --value=$overwrite_cron
+if [ -z "${overwrite_cron:-}" ]; then
+    overwrite_cron=1
+    ynh_app_setting_set --app="$app" --key="overwrite_cron" --value="$overwrite_cron"
 fi
 
-admin_mail_html=$(ynh_app_setting_get --app=$app --key=admin_mail_html)
 # If admin_mail_html doesn't exist, create it
-if [ -z "$admin_mail_html" ]; then
-	admin_mail_html=1
-	ynh_app_setting_set --app=$app --key=admin_mail_html --value=$admin_mail_html
+if [ -z "${admin_mail_html:-}" ]; then
+    admin_mail_html=1
+    ynh_app_setting_set --app="$app" --key="admin_mail_html" --value="$admin_mail_html"
 fi
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
+ynh_script_progression --message="Upgrading source files..." --weight=2
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Upgrading source files..." --weight=2
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source --dest_dir="$install_dir" --full_replace=1 --keep="passkey Backup_list.conf"
 
-	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$final_path"
-fi
+chown -R "root:root" "$install_dir"
 
 #=================================================
-# UPGRADE DEPENDENCIES
+# UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=8
-
-ynh_install_app_dependencies $pkg_dependencies
+ynh_script_progression --message="Updating $app's configuration files..." --weight=1
 
 #=================================================
-# SPECIFIC UPGRADE
+# REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-# UPDATE THE CRON FILE
-#=================================================
-ynh_script_progression --message="Updating the cron file..."
-
-# Overwrite the cron file only if it's allowed
-if [ $overwrite_cron -eq 1 ]
-then
-	# Verify the checksum and backup the file if it's different
-	ynh_backup_if_checksum_is_different --file="/etc/cron.d/$app"
-
-	cp ../conf/cron /etc/cron.d/$app
-	ynh_replace_string --match_string="__FINALPATH__" --replace_string="$final_path" --target_file=/etc/cron.d/$app
-	ynh_replace_string --match_string="__APP__" --replace_string=$app --target_file=/etc/cron.d/$app
-	if [ "$frequency" = "Daily" ]; then
-		cron_freq="0 2 * * *"
-		run_freq="every day"
-	elif [ "$frequency" = "Each 3 days" ]; then
-		cron_freq="0 2 */3 * *"
-		run_freq="each 3 days"
-	elif [ "$frequency" = "Weekly" ]; then
-		cron_freq="0 2 * * 0"
-		run_freq="once a week on sunday"
-	elif [ "$frequency" = "Biweekly" ]; then
-		cron_freq="0 2 * * 0/2"
-		run_freq="one sunday out of two"
-	else	# Monthly
-		cron_freq="0 2 1 * *"
-		run_freq="once a month on the first sunday"
-	fi
-	ynh_replace_string --match_string="__FREQUENCY__" --replace_string="$cron_freq" --target_file=/etc/cron.d/$app
-
-	# Recalculate and store the config file checksum into the app settings
-	ynh_store_file_checksum --file="/etc/cron.d/$app"
-fi
-
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-
-# Set permissions on app files
-chown -R root: $final_path
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SETUP LOGROTATE
-#=================================================
-ynh_script_progression --message="Upgrading logrotate configuration..."
+ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
 
-#=================================================
-# SEND A README FOR THE ADMIN
-#=================================================
-
-# Get main domain and buid the url of the admin panel of the app.
-admin_panel="https://$(grep portal_domain /etc/ssowat/conf.json | cut -d'"' -f4)/yunohost/admin/#/apps/$app"
-
-# Build the changelog
-ynh_app_changelog || true
-
-echo "Archivist is going to run $run_freq.
-If you want to change the frequency, have a look to the file /etc/cron.d/$app.
-
-Please read the __URL_TAG1__documentation__URL_TAG2__https://github.com/maniackcrudelis/archivist/blob/master/Configuration.md__URL_TAG3__ about the configuration of archivist for more information.
-
-You can configure this app easily by using the experimental __URL_TAG1__config-panel feature__URL_TAG2__$admin_panel/config-panel__URL_TAG3__.
-You can also find some specific actions for this app by using the experimental __URL_TAG1__action feature__URL_TAG2__$admin_panel/actions__URL_TAG3__.
-
-If you're facing an issue or want to improve this app, please open a new issue in this __URL_TAG1__project__URL_TAG2__https://github.com/YunoHost-Apps/archivist_ynh__URL_TAG3__.
-
----
-
-Changelog since your last upgrade:
-$(cat changelog)" > mail_to_send
-
-ynh_send_readme_to_admin --app_message="mail_to_send" --recipients="root" --type=upgrade
+if (( overwrite_cron == 1 )); then
+    # Add Cron configuration file
+    ynh_add_config --template="archivist.cron" --destination="/etc/cron.d/$app"
+fi
 
 #=================================================
 # END OF SCRIPT
