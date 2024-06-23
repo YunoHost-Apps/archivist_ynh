@@ -18,7 +18,6 @@ ynh_remove_logrotate
 # Remove a cron file
 ynh_secure_remove --file="/etc/cron.d/$app"
 
-ynh_secure_remove --file="/var/log/$app"
 
 #=================================================
 # END OF SCRIPT
