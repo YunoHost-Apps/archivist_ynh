@@ -12,31 +12,30 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 if [ "$encrypt" -eq 1 ] && [ -z "$encryption_pwd" ]; then
-    ynh_die --message="encryption_pwd can't be empty if you choose to enable encryption."
+    ynh_die "encryption_pwd can't be empty if you choose to enable encryption."
 fi
 # Not saved as settings by default
-ynh_app_setting_set --app="$app" --key="encryption_pwd" --value="$encryption_pwd"
+ynh_app_setting_set --key="encryption_pwd" --value="$encryption_pwd"
 
 _set_frequencies
 
-ynh_app_setting_set --app="$app" --key=overwrite_cron --value=1
+ynh_app_setting_set --key=overwrite_cron --value=1
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=3
+ynh_script_progression "Setting up source files..."
 
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 
 chown -R "root:root" "$install_dir"
-
 chown -R "root:root" "$data_dir"
 
 #=================================================
 # CONFIGURE ARCHIVIST
 #=================================================
-ynh_script_progression --message="Configuring Archivist..." --weight=2
+ynh_script_progression "Configuring Archivist..."
 
 if [ "$encrypt" -eq 1 ]; then
     encrypt=true
@@ -57,37 +56,37 @@ fi
 config_file="$install_dir/Backup_list.conf"
 cp "$install_dir/Backup_list.conf.default" "$config_file"
 
-ynh_replace_string --target_file="$config_file" --match_string="^backup_dir=.*" --replace_string="backup_dir=$data_dir/backup"
-ynh_replace_string --target_file="$config_file" --match_string="^enc_backup_dir=.*" --replace_string="enc_backup_dir=$data_dir/encrypted_backup"
+ynh_replace --file="$config_file" --match="^backup_dir=.*" --replace="backup_dir=$data_dir/backup"
+ynh_replace --file="$config_file" --match="^enc_backup_dir=.*" --replace="enc_backup_dir=$data_dir/encrypted_backup"
 
-ynh_replace_string --target_file="$config_file" --match_string="^encrypt=.*" --replace_string="encrypt=$encrypt"
-ynh_replace_string --target_file="$config_file" --match_string="^cryptpass=.*" --replace_string="cryptpass=$passkey"
+ynh_replace --file="$config_file" --match="^encrypt=.*" --replace="encrypt=$encrypt"
+ynh_replace --file="$config_file" --match="^cryptpass=.*" --replace="cryptpass=$passkey"
 
-ynh_replace_string --target_file="$config_file" --match_string="^ynh_core_backup=.*" --replace_string="ynh_core_backup=$core_backup"
+ynh_replace --file="$config_file" --match="^ynh_core_backup=.*" --replace="ynh_core_backup=$core_backup"
 
 if [ $apps_backup -eq 1 ]; then
     # Add all current applications to the backup
     while read -r backup_app; do
-        ynh_replace_string --target_file="$config_file" --match_string="^ynh_app_backup=$" --replace_string="ynh_app_backup=$backup_app\n&"
+        ynh_replace --file="$config_file" --match="^ynh_app_backup=$" --replace="ynh_app_backup=$backup_app\n&"
     done <<< "$(yunohost app list | grep 'id:' | sed 's/.*id: //')"
 fi
 
 # Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum --file="$config_file"
+ynh_store_file_checksum "$config_file"
 
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+ynh_script_progression "Adding system configurations related to $app..."
 
 # Use logrotate to manage application logfile(s)
-ynh_use_logrotate
+ynh_config_add_logrotate
 
 # Add Cron configuration file
-ynh_add_config --template="archivist.cron" --destination="/etc/cron.d/$app"
+ynh_config_add --template="archivist.cron" --destination="/etc/cron.d/$app"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"

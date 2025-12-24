@@ -8,33 +8,30 @@
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
-#=================================================
-# DECLARE DATA AND CONF FILES TO BACKUP
-#=================================================
-ynh_print_info --message="Declaring files to be backed up..."
+ynh_print_info "Declaring files to be backed up..."
 
 #=================================================
 # BACKUP THE APP MAIN DIR
 #=================================================
 
-ynh_backup --src_path="$install_dir"
+ynh_backup "$install_dir"
 
 #=================================================
 # BACKUP SYSTEM
 #=================================================
 
-ynh_backup --src_path="/etc/logrotate.d/$app"
+ynh_backup "/etc/logrotate.d/$app"
 
-ynh_backup --src_path="/etc/cron.d/$app"
+ynh_backup "/etc/cron.d/$app"
 
 #=================================================
 # BACKUP VARIOUS FILES
 #=================================================
 
-ynh_backup --src_path="/var/log/$app/"
+ynh_backup "/var/log/$app/"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_print_info --message="Backup script completed for $app. (YunoHost will then actually copy those files to the archive)."
+ynh_print_info "Backup script completed for $app. (YunoHost will then actually copy those files to the archive)."

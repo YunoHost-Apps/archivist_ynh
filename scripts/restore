@@ -11,38 +11,38 @@ source /usr/share/yunohost/helpers
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression --message="Restoring the app main directory..." --weight=1
+ynh_script_progression "Restoring the app main directory..."
 
-ynh_restore_file --origin_path="$install_dir"
+ynh_restore "$install_dir"
 
 chown -R "root:root" "$install_dir"
 
 #=================================================
 # RESTORE THE DATA DIRECTORY
 #=================================================
-ynh_script_progression --message="Restoring the data directory..." --weight=1
+ynh_script_progression "Restoring the data directory..."
 
-ynh_restore_file --origin_path="$data_dir" --not_mandatory
+ynh_restore "$data_dir"
 
 chown -R "root:root" "$data_dir"
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Restoring system configurations related to $app..." --weight=1
+ynh_script_progression "Restoring system configurations related to $app..."
 
-ynh_restore_file --origin_path="/etc/logrotate.d/$app"
+ynh_restore "/etc/logrotate.d/$app"
 
-ynh_restore_file --origin_path="/etc/cron.d/$app"
+ynh_restore "/etc/cron.d/$app"
 
 #=================================================
 # RESTORE VARIOUS FILES
 #=================================================
 
-ynh_restore_file --origin_path="/var/log/$app/"
+ynh_restore "/var/log/$app/"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Restoration completed for $app" --last
+ynh_script_progression "Restoration completed for $app"

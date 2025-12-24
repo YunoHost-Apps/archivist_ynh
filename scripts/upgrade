@@ -10,7 +10,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-ynh_script_progression --message="Ensuring downward compatibility..."
+ynh_script_progression "Ensuring downward compatibility..."
 
 _fix_frequencies
 _set_frequencies
@@ -23,63 +23,50 @@ if [ -z "${encrypt:-}" ]; then
     else
         encrypt=0
     fi
-    ynh_app_setting_set --app="$app" --key="encrypt" --value="$encrypt"
+    ynh_app_setting_set --key="encrypt" --value="$encrypt"
 fi
 
 # If core_backup doesn't exist, create it
-if [ -z "${core_backup:-}" ]; then
-    core_backup="$(grep "^ynh_core_backup=" "$install_dir/Backup_list.conf" | cut -d= -f2)"
-    ynh_app_setting_set --app="$app" --key="core_backup" --value="$core_backup"
-fi
+ynh_app_setting_set_default --key=core_backup --value="$(grep "^ynh_core_backup=" "$install_dir/Backup_list.conf" | cut -d= -f2)"
 
 # If apps_backup doesn't exist, create it
-if [ -z "${apps_backup:-}" ]; then
-    apps_backup="$(grep --count --max-count=1 "^ynh_app_backup=" "$install_dir/Backup_list.conf")"
-    ynh_app_setting_set --app="$app" --key="apps_backup" --value="$apps_backup"
-fi
+ynh_app_setting_set_default --key=apps_backup --value="$(grep --count --max-count=1 "^ynh_app_backup=" "$install_dir/Backup_list.conf")"
 
 # If overwrite_cron doesn't exist, create it
-if [ -z "${overwrite_cron:-}" ]; then
-    overwrite_cron=1
-    ynh_app_setting_set --app="$app" --key="overwrite_cron" --value="$overwrite_cron"
-fi
+ynh_app_setting_set_default --key=overwrite_cron --value=1
 
 # If admin_mail_html doesn't exist, create it
-if [ -z "${admin_mail_html:-}" ]; then
-    admin_mail_html=1
-    ynh_app_setting_set --app="$app" --key="admin_mail_html" --value="$admin_mail_html"
-fi
+ynh_app_setting_set_default --key=admin_mail_html --value=1
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Upgrading source files..." --weight=2
+ynh_script_progression "Upgrading source files..."
 
 # Download, check integrity, uncompress and patch the source from app.src
-ynh_setup_source --dest_dir="$install_dir" --full_replace=1 --keep="passkey Backup_list.conf"
+ynh_setup_source --dest_dir="$install_dir" --full_replace --keep="passkey Backup_list.conf"
 
 chown -R "root:root" "$install_dir"
-
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
-ynh_script_progression --message="Updating $app's configuration files..." --weight=1
+ynh_script_progression "Updating $app's configuration files..."
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
+ynh_script_progression "Upgrading system configurations related to $app..."
 
 # Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate --non-append
+ynh_config_add_logrotate
 
 if (( overwrite_cron == 1 )); then
     # Add Cron configuration file
-    ynh_add_config --template="archivist.cron" --destination="/etc/cron.d/$app"
+    ynh_config_add --template="archivist.cron" --destination="/etc/cron.d/$app"
 fi
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"
