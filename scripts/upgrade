@@ -27,32 +27,16 @@ if [ -z "${encrypt:-}" ]; then
 fi
 
 # If core_backup doesn't exist, create it
-# FIXMEhelpers2.1: maybe replace with: ynh_app_setting_set_default --key=core_backup --value="$(grep "^ynh_core_backup=" "$install_dir/Backup_list.conf" | cut -d= -f2)"
-if [ -z "${core_backup:-}" ]; then
-    core_backup="$(grep "^ynh_core_backup=" "$install_dir/Backup_list.conf" | cut -d= -f2)"
-    ynh_app_setting_set --key="core_backup" --value="$core_backup"
-fi
+ynh_app_setting_set_default --key=core_backup --value="$(grep "^ynh_core_backup=" "$install_dir/Backup_list.conf" | cut -d= -f2)"
 
 # If apps_backup doesn't exist, create it
-# FIXMEhelpers2.1: maybe replace with: ynh_app_setting_set_default --key=apps_backup --value="$(grep --count --max-count=1 "^ynh_app_backup=" "$install_dir/Backup_list.conf")"
-if [ -z "${apps_backup:-}" ]; then
-    apps_backup="$(grep --count --max-count=1 "^ynh_app_backup=" "$install_dir/Backup_list.conf")"
-    ynh_app_setting_set --key="apps_backup" --value="$apps_backup"
-fi
+ynh_app_setting_set_default --key=apps_backup --value="$(grep --count --max-count=1 "^ynh_app_backup=" "$install_dir/Backup_list.conf")"
 
 # If overwrite_cron doesn't exist, create it
-# FIXMEhelpers2.1: maybe replace with: ynh_app_setting_set_default --key=overwrite_cron --value=1
-if [ -z "${overwrite_cron:-}" ]; then
-    overwrite_cron=1
-    ynh_app_setting_set --key="overwrite_cron" --value="$overwrite_cron"
-fi
+ynh_app_setting_set_default --key=overwrite_cron --value=1
 
 # If admin_mail_html doesn't exist, create it
-# FIXMEhelpers2.1: maybe replace with: ynh_app_setting_set_default --key=admin_mail_html --value=1
-if [ -z "${admin_mail_html:-}" ]; then
-    admin_mail_html=1
-    ynh_app_setting_set --key="admin_mail_html" --value="$admin_mail_html"
-fi
+ynh_app_setting_set_default --key=admin_mail_html --value=1
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -62,7 +46,7 @@ ynh_script_progression "Upgrading source files..."
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir" --full_replace --keep="passkey Backup_list.conf"
 
-#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R "root:root" "$install_dir"
+chown -R "root:root" "$install_dir"
 #=================================================
 # UPDATE A CONFIG FILE
 #=================================================
